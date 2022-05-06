@@ -1,0 +1,3 @@
+indicators.c:53:6:INDICATORS_Process	8	static
+indicators.c:92:6:INDICATORS_Update_ModulesLEDs	8	static
+indicators.c:118:6:INDICATORS_Finish_StartUp	16	static

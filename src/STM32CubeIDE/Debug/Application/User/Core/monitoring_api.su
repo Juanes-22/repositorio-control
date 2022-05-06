@@ -1,0 +1,9 @@
+monitoring_api.c:29:6:MONITORING_API_Bms_VariableMonitoring	24	static
+monitoring_api.c:95:6:MONITORING_API_Dcdc_VariableMonitoring	24	static
+monitoring_api.c:143:6:MONITORING_API_Inversor_VariableMonitoring	24	static
+monitoring_api.c:192:17:MONITORING_API_Get_Bms_ReceivedStatus	16	static
+monitoring_api.c:218:17:MONITORING_API_Get_Dcdc_ReceivedStatus	16	static
+monitoring_api.c:244:17:MONITORING_API_Get_Inversor_ReceivedStatus	16	static
+monitoring_api.c:275:17:MONITORING_API_Get_Bms_Status	16	static
+monitoring_api.c:316:17:MONITORING_API_Get_Dcdc_Status	16	static
+monitoring_api.c:354:17:MONITORING_API_Get_Inversor_Status	16	static
