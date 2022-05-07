@@ -33,6 +33,9 @@ typedef struct bus1
     driving_mode_t          driving_mode;
     failure_t               failure;
 
+    /* Variable velocidad [0:100] */
+    float 				    velocidad_inversor;
+
     /* Estructuras con variables decodificadas de los módulos */
     rx_peripherals_vars_t   Rx_Peripherals;
     rx_bms_vars_t           Rx_Bms;
@@ -48,12 +51,6 @@ typedef struct bus1
     module_status_t         bms_status;
     module_status_t         dcdc_status;
     module_status_t         inversor_status;
-
-    /* Variable velocidad [0:100] */
-    uint32_t 				velocidad_inversor;
-
-    /* Variable info del módulo Control */
-    module_info_t           control_ok;
 
 } typedef_bus1_t;
 

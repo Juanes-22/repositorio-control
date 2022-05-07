@@ -28,8 +28,16 @@ typedef_bus1_t bus_data =
 		/* Variable falla */
 		.failure = kFAILURE_CAUTION1,
 
+		/* Variable velocidad */
+		.velocidad_inversor = 0U,
+
 		/* Estructura de periféricos */
-		.Rx_Peripherals = {.botones_cambio_estado = kBTN_NONE, .hombre_muerto = kHOMBRE_MUERTO_OFF, .perifericos_ok = kMODULE_INFO_ERROR},
+		.Rx_Peripherals = 
+		{
+			.botones_cambio_estado = kBTN_NONE, 
+			.hombre_muerto = kHOMBRE_MUERTO_OFF, 
+			.perifericos_ok = kMODULE_INFO_ERROR
+		},
 
 		/* Estructuras de BMS */
 		.Rx_Bms = {.bms_ok = kMODULE_INFO_ERROR},
@@ -47,12 +55,6 @@ typedef_bus1_t bus_data =
 		.bms_status = kMODULE_STATUS_DATA_PROBLEM,
 		.dcdc_status = kMODULE_STATUS_DATA_PROBLEM,
 		.inversor_status = kMODULE_STATUS_DATA_PROBLEM,
-
-		/* Variable velocidad */
-		.velocidad_inversor = 0U,
-
-		/* Variable info de control */
-		.control_ok = kMODULE_INFO_ERROR,
 };
 
 /* Inicialización de bus de salida CAN (bus 2) */

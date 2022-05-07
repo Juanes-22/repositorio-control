@@ -178,6 +178,7 @@ void MONITORING_Process(void)
 /***********************************************************************************************************************
  * Private functions implementation
  **********************************************************************************************************************/
+
 /**
  * @brief Modules Received Status
  *
@@ -195,6 +196,7 @@ static void MONITORING_Update_ReceivedModulesStatus(void)
 }
 
 #if (USE_VEHICLE_VAR_MONITORING_FEATURE > 0)
+
 /**
  * @brief Vehicle Variables Monitoring
  *
@@ -209,17 +211,17 @@ static void MONITORING_Update_AnalogVariablesState(void)
     {
     case kDRIVING_MODE_ECO:
 
-        /* actualiza estado de las variables del módulo BMS */
+        /* Actualiza estado de las variables del módulo BMS */
         MONITORING_API_Bms_VariableMonitoring(  &bus_data.Rx_Bms,
                                                 &bus_data.St_Bms,
                                                 &bms_eco_limits);
 
-        /* actualiza estado de las variables del módulo DCDC */
+        /* Actualiza estado de las variables del módulo DCDC */
         MONITORING_API_Dcdc_VariableMonitoring( &bus_data.Rx_Dcdc,
                                                 &bus_data.St_Dcdc,
                                                 &dcdc_eco_limits);
 
-        /* actualiza estado de las variables del módulo inversor */
+        /* Actualiza estado de las variables del módulo inversor */
         MONITORING_API_Inversor_VariableMonitoring( &bus_data.Rx_Inversor,
                                                     &bus_data.St_Inversor,
                                                     &inversor_eco_limits);
@@ -228,17 +230,17 @@ static void MONITORING_Update_AnalogVariablesState(void)
 
     case kDRIVING_MODE_NORMAL:
 
-        /* actualiza estado de las variables del módulo BMS */
+        /* Actualiza estado de las variables del módulo BMS */
         MONITORING_API_Bms_VariableMonitoring(  &bus_data.Rx_Bms,
                                                 &bus_data.St_Bms,
                                                 &bms_normal_limits);
 
-        /* actualiza estado de las variables del módulo DCDC */
+        /* Actualiza estado de las variables del módulo DCDC */
         MONITORING_API_Dcdc_VariableMonitoring( &bus_data.Rx_Dcdc,
                                                 &bus_data.St_Dcdc,
                                                 &dcdc_normal_limits);
 
-        /* actualiza estado de las variables del módulo inversor */
+        /* Actualiza estado de las variables del módulo inversor */
         MONITORING_API_Inversor_VariableMonitoring( &bus_data.Rx_Inversor,
                                                     &bus_data.St_Inversor,
                                                     &inversor_normal_limits);
@@ -247,17 +249,17 @@ static void MONITORING_Update_AnalogVariablesState(void)
 
     case kDRIVING_MODE_SPORT:
 
-        /* actualiza estado de las variables del módulo BMS */
+        /* Actualiza estado de las variables del módulo BMS */
         MONITORING_API_Bms_VariableMonitoring(  &bus_data.Rx_Bms,
                                                 &bus_data.St_Bms,
                                                 &bms_sport_limits);
 
-        /* actualiza estado de las variables del módulo DCDC */
+        /* Actualiza estado de las variables del módulo DCDC */
         MONITORING_API_Dcdc_VariableMonitoring( &bus_data.Rx_Dcdc,
                                                 &bus_data.St_Dcdc,
                                                 &dcdc_sport_limits);
 
-        /* actualiza estado de las variables del módulo inversor */
+        /* Actualiza estado de las variables del módulo inversor */
         MONITORING_API_Inversor_VariableMonitoring( &bus_data.Rx_Inversor,
                                                     &bus_data.St_Inversor,
                                                     &inversor_sport_limits);
@@ -278,8 +280,7 @@ static void MONITORING_Update_AnalogVariablesState(void)
  */
 static void MONITORING_Update_ModulesStatus(void)
 {
-    /* las fallas internas tienen prioridad sobre el monitoreo de las variables del vehículo */
-
+    /* Las fallas internas tienen prioridad sobre el monitoreo de las variables del vehículo */
     if (bus_data.bms_status != kMODULE_STATUS_PROBLEM)
     {
         bus_data.bms_status = MONITORING_API_Get_Bms_Status(&bus_data.St_Bms);                   // actualiza variable estado del módulo BMS
@@ -297,5 +298,3 @@ static void MONITORING_Update_ModulesStatus(void)
 }
 
 #endif /* USE_VEHICLE_VAR_MONITORING_FEATURE */
-
-

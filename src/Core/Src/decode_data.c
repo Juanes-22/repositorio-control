@@ -23,16 +23,16 @@
 decode_status_t flag_decodificar = NO_DECODIFICA;
 
 /** @brief Puntero a estructura de tipo rx_peripherals_vars_t que contiene los valores de las variables decodificadas de Periféricos */
-rx_peripherals_vars_t* Rx_Peripherals = &bus_data.Rx_Peripherals;
+static rx_peripherals_vars_t* Rx_Peripherals = &bus_data.Rx_Peripherals;
 
 /** @brief Puntero a estructura de tipo rx_bms_vars_t que contiene los valores de las variables decodificadas de BMS */
-rx_bms_vars_t* Rx_Bms = &bus_data.Rx_Bms;
+static rx_bms_vars_t* Rx_Bms = &bus_data.Rx_Bms;
 
 /** @brief Puntero a estructura de tipo rx_dcdc_vars_t que contiene los valores de las variables decodificadas de DCDC */
-rx_dcdc_vars_t* Rx_Dcdc = &bus_data.Rx_Dcdc;
+static rx_dcdc_vars_t* Rx_Dcdc = &bus_data.Rx_Dcdc;
 
 /** @brief Puntero a estructura de tipo rx_inversor_vars_t que contiene los valores de las variables decodificadas de Inversor */
-rx_inversor_vars_t* Rx_Inversor = &bus_data.Rx_Inversor;
+static rx_inversor_vars_t* Rx_Inversor = &bus_data.Rx_Inversor;
 
 /***********************************************************************************************************************
  * Private functions prototypes

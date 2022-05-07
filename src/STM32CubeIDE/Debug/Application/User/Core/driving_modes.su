@@ -1,0 +1,3 @@
+driving_modes.c:63:6:DRIVING_MODES_Process	8	static
+driving_modes.c:83:13:DRIVING_MODES_StateMachine	8	static
+driving_modes.c:167:13:DRIVING_MODES_Send_DrivingMode	16	static

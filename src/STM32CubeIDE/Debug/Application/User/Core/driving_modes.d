@@ -1,10 +1,8 @@
-Application/User/Core/app_control.o: \
- C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/app_control.c \
- ../../Core/Inc/app_control.h ../../Core/Inc/buses.h \
+Application/User/Core/driving_modes.o: \
+ C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/driving_modes.c \
+ ../../Core/Inc/driving_modes.h ../../Core/Inc/buses.h \
  ../../Core/Inc/types.h ../../Core/Inc/can_def.h \
- ../../Core/Inc/decode_data.h ../../Core/Inc/buses.h \
- ../../Core/Inc/driving_modes.h ../../Core/Inc/indicators.h \
- ../../Core/Inc/main.h \
+ ../../Core/Inc/indicators.h ../../Core/Inc/main.h \
  ../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h \
  ../../Core/Inc/stm32f4xx_hal_conf.h \
  ../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h \
@@ -34,29 +32,15 @@ Application/User/Core/app_control.o: \
  ../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h \
  ../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h \
  ../../Drivers/BSP/STM32F4xx-Control/stm32f4xx_control.h \
- ../../Drivers/BSP/STM32F4xx-Control/stm32f4xx_control_errno.h \
- ../../Core/Inc/failures.h ../../Core/Inc/rampa_pedal.h \
- ../../Core/Inc/monitoring.h ../../Core/Inc/monitoring_api.h \
- ../../Core/Inc/indicators.h ../../Core/Inc/can_app.h \
- ../../Drivers/CAN_Driver/can_api.h ../../Core/Inc/can_hw.h \
- ../../Core/Inc/can.h ../../Core/Inc/tim.h \
- ../../Drivers/CAN_Driver/can_wrapper.h \
- ../../Drivers/CAN_Driver/can_api.h ../../Core/Inc/main.h \
- ../../Core/Inc/decode_data.h
+ ../../Drivers/BSP/STM32F4xx-Control/stm32f4xx_control_errno.h
 
-../../Core/Inc/app_control.h:
+../../Core/Inc/driving_modes.h:
 
 ../../Core/Inc/buses.h:
 
 ../../Core/Inc/types.h:
 
 ../../Core/Inc/can_def.h:
-
-../../Core/Inc/decode_data.h:
-
-../../Core/Inc/buses.h:
-
-../../Core/Inc/driving_modes.h:
 
 ../../Core/Inc/indicators.h:
 
@@ -121,31 +105,3 @@ Application/User/Core/app_control.o: \
 ../../Drivers/BSP/STM32F4xx-Control/stm32f4xx_control.h:
 
 ../../Drivers/BSP/STM32F4xx-Control/stm32f4xx_control_errno.h:
-
-../../Core/Inc/failures.h:
-
-../../Core/Inc/rampa_pedal.h:
-
-../../Core/Inc/monitoring.h:
-
-../../Core/Inc/monitoring_api.h:
-
-../../Core/Inc/indicators.h:
-
-../../Core/Inc/can_app.h:
-
-../../Drivers/CAN_Driver/can_api.h:
-
-../../Core/Inc/can_hw.h:
-
-../../Core/Inc/can.h:
-
-../../Core/Inc/tim.h:
-
-../../Drivers/CAN_Driver/can_wrapper.h:
-
-../../Drivers/CAN_Driver/can_api.h:
-
-../../Core/Inc/main.h:
-
-../../Core/Inc/decode_data.h:

@@ -157,6 +157,16 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/decode_data.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/Core/driving_modes.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/driving_modes.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/Core/failures.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/failures.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/Core/gpio.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/gpio.c</locationURI>
@@ -180,6 +190,11 @@
 			<name>Application/User/Core/monitoring_api.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/monitoring_api.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/Core/rampa_pedal.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/rampa_pedal.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/Core/stm32f4xx_hal_msp.c</name>

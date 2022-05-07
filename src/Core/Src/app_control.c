@@ -17,6 +17,9 @@
 
 #include "buses.h"
 #include "decode_data.h"
+#include "driving_modes.h"
+#include "failures.h"
+#include "rampa_pedal.h"
 #include "monitoring.h"
 #include "indicators.h"
 #include "can_app.h"
@@ -27,8 +30,11 @@
  * Private macros
  **********************************************************************************************************************/
 
-/** Duración de blink de LED de estado kWAITING_ECHO */
-#define BLINK_TIME              250U
+/** @brief Duración del echo en ms */
+#define ECHO_LENGTH         1000U
+
+/** @brief Duración de la espera hasta timeout en ms */
+#define TIMEOUT_VALUE       5000U
 
 /***********************************************************************************************************************
  * Private variables definitions
@@ -42,14 +48,19 @@ enum App_States
 };
 
 /** @brief Estado de la máquina de estados */
-uint8_t app_state = kWAITING_ECHO_RESPONSE;
+static uint8_t app_state = kWAITING_ECHO_RESPONSE;
 
-/** Para blink LED de estado kWAITING_ECHO */
-uint32_t blink_tickstart;
+/** @brief  Para conteo de timeout en estado kWAITING_ECHO_RESPONSE */
+static uint32_t tickstart;
+
+/** @brief  Para timeout de echo en estado kWAITING_ECHO_RESPONSE */
+static bool time_out = false;
 
 /***********************************************************************************************************************
  * Private functions prototypes
  **********************************************************************************************************************/
+
+static void MX_APP_Send_Echo(typedef_bus2_t* bus_can_output);
 
 /***********************************************************************************************************************
  * Public functions implementation
@@ -93,16 +104,23 @@ void MX_APP_Process(void)
 	/* Estado esperando respuesta ECHO a Tarjetas: BMS, DCDC, Inversor, Perifericos */
 	case kWAITING_ECHO_RESPONSE:
 
-		/* Ticks for the blinking of the LED */
-		blink_tickstart = HAL_GetTick();
+		/* Envía echo a demás tarjetas */
+		MX_APP_Send_Echo(&bus_can_output);
+
+		/* Get ticks for counting of timeout */
+		tickstart = HAL_GetTick();
 
 		while(1)
 		{
 			/* LEDs para indicar confirmación de módulos */
 			INDICATORS_Update_ModulesLEDs();
 
-			/* Send ECHO */
+			if( (HAL_GetTick() - tickstart) > TIMEOUT_VALUE )
+			{
+				time_out = true;
+			}
 
+			/* Si todos los módulos OK, control está listo */
 			if (bus_can_input.bms_ok == CAN_VALUE_MODULE_OK &&
                 bus_can_input.dcdc_ok == CAN_VALUE_MODULE_OK &&
                 bus_can_input.inversor_ok == CAN_VALUE_MODULE_OK &&
@@ -110,7 +128,7 @@ void MX_APP_Process(void)
 			{
 				HAL_Delay(500);
 
-				/* Send perifericos_ok MODULE_OK response */
+				/* Send control_ok MODULE_OK response */
 				bus_can_output.control_ok = CAN_VALUE_MODULE_OK;
 				CAN_APP_Send_BusData(&bus_can_output);
 
@@ -118,6 +136,14 @@ void MX_APP_Process(void)
 				INDICATORS_Finish_StartUp();
 
 				app_state = kRUNNING;
+			}
+			else if(time_out)
+			{
+				MX_APP_Send_Echo(&bus_can_output);
+
+				tickstart = HAL_GetTick();
+
+				time_out = false;
 			}
 		}
 		break;
@@ -127,9 +153,9 @@ void MX_APP_Process(void)
 
 		DECODE_DATA_Process();
 
-		DRIVING_MODES_SM_Process();
+		DRIVING_MODES_Process();
 
-		FAILURES_SM_Process();
+		FAILURES_Process();
 
 		MONITORING_Process();
 
@@ -140,8 +166,22 @@ void MX_APP_Process(void)
 	    CAN_APP_Process();
 
 		break;
-
-	default:
-		break;
 	}
+}
+
+/***********************************************************************************************************************
+ * Private functions implementation
+ **********************************************************************************************************************/
+
+static void MX_APP_Send_Echo(typedef_bus2_t* bus_can_output)
+{
+	bus_can_output->control_ok = CAN_VALUE_MODULE_OK;
+
+	CAN_APP_Send_BusData(bus_can_output);
+
+	HAL_Delay(ECHO_LENGTH);
+
+	bus_can_output->control_ok = CAN_VALUE_MODULE_IDLE;
+
+	CAN_APP_Send_BusData(bus_can_output);
 }

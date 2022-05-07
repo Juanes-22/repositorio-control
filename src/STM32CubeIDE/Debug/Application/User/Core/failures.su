@@ -1,0 +1,6 @@
+failures.c:65:6:FAILURES_Process	8	static
+failures.c:92:13:FAILURES_StateMachine	8	static
+failures.c:195:13:FAILURES_Is_Autokill	16	static
+failures.c:226:13:FAILURES_Send_ControlInfo	16	static
+failures.c:248:13:FAILURES_Send_Failure	16	static
+failures.c:275:13:FAILURES_Send_Autokill	16	static
