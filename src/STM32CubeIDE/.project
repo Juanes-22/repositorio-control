@@ -152,6 +152,11 @@
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/can_app.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/Core/can_hw.c</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/can_hw.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/Core/decode_data.c</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/Core/Src/decode_data.c</locationURI>

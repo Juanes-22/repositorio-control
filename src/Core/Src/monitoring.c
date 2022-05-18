@@ -280,20 +280,39 @@ static void MONITORING_Update_AnalogVariablesState(void)
  */
 static void MONITORING_Update_ModulesStatus(void)
 {
+	module_status_t analog_bms_status;
+	module_status_t analog_dcdc_status;
+	module_status_t analog_inversor_status;
+
     /* Las fallas internas tienen prioridad sobre el monitoreo de las variables del vehículo */
     if (bus_data.bms_status != kMODULE_STATUS_PROBLEM)
     {
-        bus_data.bms_status = MONITORING_API_Get_Bms_Status(&bus_data.St_Bms);                   // actualiza variable estado del módulo BMS
+    	analog_bms_status = MONITORING_API_Get_Bms_Status(&bus_data.St_Bms);
+
+    	if( analog_bms_status != kMODULE_STATUS_DATA_PROBLEM)
+    	{
+    		bus_data.bms_status = analog_bms_status;				// actualiza variable estado del módulo BMS
+    	}
     }
 
     if (bus_data.dcdc_status != kMODULE_STATUS_PROBLEM)
     {
-        bus_data.dcdc_status = MONITORING_API_Get_Dcdc_Status(&bus_data.St_Dcdc);                // actualiza variable estado del módulo DCDC
+    	analog_dcdc_status = MONITORING_API_Get_Dcdc_Status(&bus_data.St_Dcdc);
+
+    	if( analog_dcdc_status != kMODULE_STATUS_DATA_PROBLEM)
+    	{
+    		bus_data.dcdc_status = analog_dcdc_status;				// actualiza variable estado del módulo DCDC
+    	}
     }
 
     if (bus_data.inversor_status != kMODULE_STATUS_PROBLEM)
     {
-        bus_data.inversor_status = MONITORING_API_Get_Inversor_Status(&bus_data.St_Inversor);    // actualiza variable estado del módulo inversor
+    	analog_inversor_status = MONITORING_API_Get_Inversor_Status(&bus_data.St_Inversor);
+
+    	if( analog_inversor_status != kMODULE_STATUS_DATA_PROBLEM)
+    	{
+    		bus_data.inversor_status = analog_inversor_status;		// actualiza variable estado del módulo Inversor
+    	}
     }
 }
 
