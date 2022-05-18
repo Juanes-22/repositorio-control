@@ -1,7 +1,7 @@
 /**
  * @file can_hw.c
  * @author Subgrupo Control y Periféricos - Elektron Motorsports
- * @brief Codigo configuración hardware CAN
+ * @brief Código configuración hardware CAN
  * @version 0.1
  * @date 2022-05-05
  *
@@ -46,6 +46,8 @@ can_rx_status_t flag_rx_can = CAN_MSG_NOT_RECEIVED;
 /** Bandera transmisión CAN */
 can_tx_status_t flag_tx_can = CAN_TX_READY;
 
+int i = 0;
+
 /***********************************************************************************************************************
  * Private functions prototypes
  **********************************************************************************************************************/
@@ -79,8 +81,7 @@ void CAN_HW_Init(void)
 	/* Activate CAN notification (enable interrupts) */
 	if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
 	{
-		/* Notification Error */
-		Error_Handler();
+		Error_Handler();		// notification Error
 	}
 
 	/* CAN message transmission configuration */
@@ -95,21 +96,11 @@ void CAN_HW_Init(void)
 	/* Start transmission process */
 	if (HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox) != HAL_OK)
 	{
-		/* Transmission request Error */
-		Error_Handler();
+		Error_Handler();		// transmission request Error
 	}
 
 	/* Start time base trigger CAN timer */
 	HAL_TIM_Base_Start_IT(&htim7);
-
-	/* Inicializa CAN usando driver */
-	/*CAN_API_Init( &can_obj,
-				STANDARD_FRAME,
-				NORMAL_MSG,
-				CAN_Wrapper_Init,
-				CAN_Wrapper_TransmitData,
-				CAN_Wrapper_ReceiveData,
-				CAN_Wrapper_DataCount);*/
 }
 
 /***********************************************************************************************************************
@@ -121,6 +112,9 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan)
 {
     /* The flag indicates that the callback was called */
     flag_rx_can = CAN_MSG_RECEIVED;
+
+    /* Get the received message */
+	HAL_CAN_GetRxMessage(&hcan2, CAN_RX_FIFO0, &RxHeader, RxData);
 }
 
 /* Callback timer trigger de transmisión de datos de bus de salida CAN a módulo CAN */
@@ -136,7 +130,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 		/* The flag indicates that the callback was called */
 		flag_tx_can = CAN_TX_READY;
 
-		/* Transmit data test */
+		/* Transmit test data */
 		TxData[0] = (char)(i & 0xff);
 		HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TxData, &TxMailbox);
 	}
@@ -149,12 +143,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 static void CAN_FilterConfig(void)
 {
 	sFilterConfig.FilterActivation = CAN_FILTER_ENABLE;
-	sFilterConfig.FilterBank = 0;			// CAN 1 [0..13]
+	sFilterConfig.FilterBank = 0;							// CAN 1 [0..13]
 	sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
 
-	sFilterConfig.FilterIdHigh = 0;			//msg_id << 5;
+	sFilterConfig.FilterIdHigh = 0;							// msg_id << 5;
 	sFilterConfig.FilterIdLow = 0;
-	sFilterConfig.FilterMaskIdHigh = 0; 	//msg_id << 5;
+	sFilterConfig.FilterMaskIdHigh = 0; 					// msg_id << 5;
 	sFilterConfig.FilterMaskIdLow = 0x0000;
 	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
 	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;

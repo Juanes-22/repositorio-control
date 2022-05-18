@@ -9,6 +9,7 @@ C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/app
 C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/buses.c \
 C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/can.c \
 C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/can_app.c \
+C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/can_hw.c \
 C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/decode_data.c \
 C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/driving_modes.c \
 C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/failures.c \
@@ -29,6 +30,7 @@ OBJS += \
 ./Application/User/Core/buses.o \
 ./Application/User/Core/can.o \
 ./Application/User/Core/can_app.o \
+./Application/User/Core/can_hw.o \
 ./Application/User/Core/decode_data.o \
 ./Application/User/Core/driving_modes.o \
 ./Application/User/Core/failures.o \
@@ -49,6 +51,7 @@ C_DEPS += \
 ./Application/User/Core/buses.d \
 ./Application/User/Core/can.d \
 ./Application/User/Core/can_app.d \
+./Application/User/Core/can_hw.d \
 ./Application/User/Core/decode_data.d \
 ./Application/User/Core/driving_modes.d \
 ./Application/User/Core/failures.d \
@@ -73,6 +76,8 @@ Application/User/Core/buses.o: C:/Users/juane/OneDrive/Escritorio/elektron-stm32
 Application/User/Core/can.o: C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/can.c Application/User/Core/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../../Core/Inc -I../../Drivers/STM32F4xx_HAL_Driver/Inc -I../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../../Drivers/CMSIS/Include -I../../Drivers/BSP/STM32F4xx-Control -I"../../Drivers/CAN_Driver" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Application/User/Core/can_app.o: C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/can_app.c Application/User/Core/subdir.mk
+	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../../Core/Inc -I../../Drivers/STM32F4xx_HAL_Driver/Inc -I../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../../Drivers/CMSIS/Include -I../../Drivers/BSP/STM32F4xx-Control -I"../../Drivers/CAN_Driver" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
+Application/User/Core/can_hw.o: C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/can_hw.c Application/User/Core/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../../Core/Inc -I../../Drivers/STM32F4xx_HAL_Driver/Inc -I../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../../Drivers/CMSIS/Include -I../../Drivers/BSP/STM32F4xx-Control -I"../../Drivers/CAN_Driver" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
 Application/User/Core/decode_data.o: C:/Users/juane/OneDrive/Escritorio/elektron-stm32-workspace/Control/Core/Src/decode_data.c Application/User/Core/subdir.mk
 	arm-none-eabi-gcc "$<" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F446xx -c -I../../Core/Inc -I../../Drivers/STM32F4xx_HAL_Driver/Inc -I../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../../Drivers/CMSIS/Include -I../../Drivers/BSP/STM32F4xx-Control -I"../../Drivers/CAN_Driver" -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"$(@:%.o=%.d)" -MT"$@" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "$@"
@@ -104,7 +109,7 @@ Application/User/Core/tim.o: C:/Users/juane/OneDrive/Escritorio/elektron-stm32-w
 clean: clean-Application-2f-User-2f-Core
 
 clean-Application-2f-User-2f-Core:
-	-$(RM) ./Application/User/Core/app_control.d ./Application/User/Core/app_control.o ./Application/User/Core/buses.d ./Application/User/Core/buses.o ./Application/User/Core/can.d ./Application/User/Core/can.o ./Application/User/Core/can_app.d ./Application/User/Core/can_app.o ./Application/User/Core/decode_data.d ./Application/User/Core/decode_data.o ./Application/User/Core/driving_modes.d ./Application/User/Core/driving_modes.o ./Application/User/Core/failures.d ./Application/User/Core/failures.o ./Application/User/Core/gpio.d ./Application/User/Core/gpio.o ./Application/User/Core/indicators.d ./Application/User/Core/indicators.o ./Application/User/Core/main.d ./Application/User/Core/main.o ./Application/User/Core/monitoring.d ./Application/User/Core/monitoring.o ./Application/User/Core/monitoring_api.d ./Application/User/Core/monitoring_api.o ./Application/User/Core/rampa_pedal.d ./Application/User/Core/rampa_pedal.o ./Application/User/Core/stm32f4xx_hal_msp.d ./Application/User/Core/stm32f4xx_hal_msp.o ./Application/User/Core/stm32f4xx_it.d ./Application/User/Core/stm32f4xx_it.o ./Application/User/Core/syscalls.d ./Application/User/Core/syscalls.o ./Application/User/Core/sysmem.d ./Application/User/Core/sysmem.o ./Application/User/Core/tim.d ./Application/User/Core/tim.o
+	-$(RM) ./Application/User/Core/app_control.d ./Application/User/Core/app_control.o ./Application/User/Core/buses.d ./Application/User/Core/buses.o ./Application/User/Core/can.d ./Application/User/Core/can.o ./Application/User/Core/can_app.d ./Application/User/Core/can_app.o ./Application/User/Core/can_hw.d ./Application/User/Core/can_hw.o ./Application/User/Core/decode_data.d ./Application/User/Core/decode_data.o ./Application/User/Core/driving_modes.d ./Application/User/Core/driving_modes.o ./Application/User/Core/failures.d ./Application/User/Core/failures.o ./Application/User/Core/gpio.d ./Application/User/Core/gpio.o ./Application/User/Core/indicators.d ./Application/User/Core/indicators.o ./Application/User/Core/main.d ./Application/User/Core/main.o ./Application/User/Core/monitoring.d ./Application/User/Core/monitoring.o ./Application/User/Core/monitoring_api.d ./Application/User/Core/monitoring_api.o ./Application/User/Core/rampa_pedal.d ./Application/User/Core/rampa_pedal.o ./Application/User/Core/stm32f4xx_hal_msp.d ./Application/User/Core/stm32f4xx_hal_msp.o ./Application/User/Core/stm32f4xx_it.d ./Application/User/Core/stm32f4xx_it.o ./Application/User/Core/syscalls.d ./Application/User/Core/syscalls.o ./Application/User/Core/sysmem.d ./Application/User/Core/sysmem.o ./Application/User/Core/tim.d ./Application/User/Core/tim.o
 
 .PHONY: clean-Application-2f-User-2f-Core
 

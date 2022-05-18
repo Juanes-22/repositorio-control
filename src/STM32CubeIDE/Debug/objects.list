@@ -2,6 +2,7 @@
 "./Application/User/Core/buses.o"
 "./Application/User/Core/can.o"
 "./Application/User/Core/can_app.o"
+"./Application/User/Core/can_hw.o"
 "./Application/User/Core/decode_data.o"
 "./Application/User/Core/driving_modes.o"
 "./Application/User/Core/failures.o"

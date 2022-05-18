@@ -50,10 +50,10 @@ enum App_States
 /** @brief Estado de la máquina de estados */
 static uint8_t app_state = kWAITING_ECHO_RESPONSE;
 
-/** @brief  Para conteo de timeout en estado kWAITING_ECHO_RESPONSE */
+/** Para conteo de timeout en estado kWAITING_ECHO_RESPONSE */
 static uint32_t tickstart;
 
-/** @brief  Para timeout de echo en estado kWAITING_ECHO_RESPONSE */
+/** Para timeout de echo en estado kWAITING_ECHO_RESPONSE */
 static bool time_out = false;
 
 /***********************************************************************************************************************
@@ -128,8 +128,9 @@ void MX_APP_Process(void)
 			{
 				HAL_Delay(500);
 
-				/* Send control_ok MODULE_OK response */
 				bus_can_output.control_ok = CAN_VALUE_MODULE_OK;
+
+				/* Send control_ok MODULE_OK response */
 				//CAN_APP_Send_BusData(&bus_can_output);
 
 				/* Indicate that start up has finished */
