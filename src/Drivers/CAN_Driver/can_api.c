@@ -40,12 +40,12 @@
  * @return can_status_t
  */
 can_status_t CAN_API_Init(  CAN_t *obj,
-                        can_id_t IDE,
-                        can_rtr_t RTR,
-                        init_ll_can_t Fn_Init_Can,
-                        send_can_data_t Fn_Send_Can_Data,
-                        read_can_data_t Fn_Read_Can_Data,
-                        get_msg_count_t Fn_Get_Msg_Count)
+                        	can_id_t IDE,
+							can_rtr_t RTR,
+							init_ll_can_t Fn_Init_Can,
+							send_can_data_t Fn_Send_Can_Data,
+							read_can_data_t Fn_Read_Can_Data,
+							get_msg_count_t Fn_Get_Msg_Count)
 {
     can_status_t status;
 

@@ -105,7 +105,7 @@ void MX_APP_Process(void)
 	case kWAITING_ECHO_RESPONSE:
 
 		/* Envía echo a demás tarjetas */
-		//MX_APP_Send_Echo(&bus_can_output);
+		MX_APP_Send_Echo(&bus_can_output);
 
 		/* Get ticks for counting of timeout */
 		tickstart = HAL_GetTick();
@@ -131,7 +131,7 @@ void MX_APP_Process(void)
 				bus_can_output.control_ok = CAN_VALUE_MODULE_OK;
 
 				/* Send control_ok MODULE_OK response */
-				//CAN_APP_Send_BusData(&bus_can_output);
+				CAN_APP_Send_BusData(&bus_can_output);
 
 				/* Indicate that start up has finished */
 				INDICATORS_Finish_StartUp();
@@ -142,7 +142,7 @@ void MX_APP_Process(void)
 			}
 			else if(time_out)
 			{
-				//MX_APP_Send_Echo(&bus_can_output);
+				MX_APP_Send_Echo(&bus_can_output);
 
 				tickstart = HAL_GetTick();
 
@@ -166,7 +166,7 @@ void MX_APP_Process(void)
 
 	    //INDICATORS_Process();
 
-	    //CAN_APP_Process();
+	    CAN_APP_Process();
 
 		break;
 	}

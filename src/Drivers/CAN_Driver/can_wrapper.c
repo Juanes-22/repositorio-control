@@ -3,7 +3,7 @@
  * @author Subgrupo Control y Periféricos - Elektron Motorsports
  * @brief Implementaciones funciones wrapper CAN para tarjeta de Control
  * @version 0.1
- * @date 2022-01-05
+ * @date 2022-18-05
  *
  * @copyright Copyright (c) 2022
  *
@@ -19,29 +19,20 @@
  * Private variables definitions
  **********************************************************************************************************************/
 
-/** @brief CAN handle structure instance */
-static CAN_HandleTypeDef hcan;
+/* STM32 CAN Tx message header structure instance */
+static CAN_TxHeaderTypeDef TxHeader;
 
-/** @brief CAN filter configuration structure instance */
-static CAN_FilterTypeDef aFilterConfig;
+/* STM32 CAN Rx message header structure definition */
+static CAN_RxHeaderTypeDef RxHeader;
 
-/** @brief CAN Tx message header structure instance */
-static CAN_TxHeaderTypeDef txHeader;
-
-/** @brief CAN Rx message header structure definition */
-static CAN_RxHeaderTypeDef rxHeader;
+/* STM32 CAN filter configuration structure instance */
+static CAN_FilterTypeDef sFilterConfig;
 
 /***********************************************************************************************************************
  * Private functions prototypes
  **********************************************************************************************************************/
 
-static void CAN_Init(void);
-
 static void CAN_FilterConfig(void);
-
-static void CAN_ActivateNotification(void);
-
-static void CAN_Start(void);
 
 /***********************************************************************************************************************
  * Public functions implementation
@@ -57,14 +48,37 @@ static void CAN_Start(void);
  */
 can_status_t CAN_Wrapper_Init(void)
 {
-    CAN_Init();					// CAN1 peripheral initialization
+	/**
+	 *  STM32 CAN initialization
+	 */
 
-    CAN_FilterConfig();    		// CAN1 filter configuration
+	/* Initialize time base timer for CAN triggering */
+	MX_TIM7_Init();
 
-	CAN_ActivateNotification();	// CAN1 enable interrupt
+	/* Initialize CAN1 */
+	MX_CAN1_Init();
 
-	CAN_Start();					// CAN1 start the CAN module
+	/* Disable debug freeze */
+	CAN1->MCR &= (~CAN_MCR_DBF);
+
+	/* CAN filter configuration */
+	CAN_FilterConfig();
+
+	/* Start CAN module */
+	if (HAL_CAN_Start(&hcan1) != HAL_OK)
+	{
+		Error_Handler();
+	}
+
+	/* Activate CAN notification (enable interrupts) */
+	if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
+	{
+		Error_Handler();
+	}
 	
+	/* Start time base trigger CAN timer */
+	HAL_TIM_Base_Start_IT(&htim7);
+
 	return CAN_STATUS_OK;
 }
 
@@ -82,18 +96,23 @@ can_status_t CAN_Wrapper_Init(void)
  */
 can_status_t CAN_Wrapper_TransmitData(uint32_t id, uint8_t ide, uint8_t rtr, uint8_t dlc, uint8_t *data)
 {
-    uint32_t mailbox;
+	/**
+	 *  STM32 CAN transmit message
+	 */
 
-	txHeader.StdId = id;            // standard identifier value
-	txHeader.DLC = dlc; 			// length of frame
-	txHeader.IDE = CAN_ID_STD; 		// type of identifier
-	txHeader.RTR = CAN_RTR_DATA;    // data frame
+    uint32_t TxMailbox;
 
-	HAL_CAN_AddTxMessage(&hcan, &txHeader, data, &mailbox);
+    /* CAN message transmission configuration */
+	TxHeader.StdId = id;            			// standard identifier value
+	TxHeader.DLC = dlc; 						// length of frame
+	TxHeader.IDE = CAN_ID_STD; 					// type of identifier
+	TxHeader.RTR = CAN_RTR_DATA;    			// type of frame
+	TxHeader.TransmitGlobalTime = DISABLE;
 
-	if(mailbox == CAN_TX_MAILBOX2)
-    {
-		while( HAL_CAN_IsTxMessagePending(&hcan, CAN_TX_MAILBOX0));
+	/* Start CAN transmission process */
+	if (HAL_CAN_AddTxMessage(&hcan1, &TxHeader, data, &TxMailbox) != HAL_OK)
+	{
+		Error_Handler();						// transmission request Error
 	}
 
 	return CAN_STATUS_OK;
@@ -110,9 +129,15 @@ can_status_t CAN_Wrapper_TransmitData(uint32_t id, uint8_t ide, uint8_t rtr, uin
  */
 can_status_t CAN_Wrapper_ReceiveData(uint32_t *id, uint8_t *data)
 {
-    HAL_CAN_GetRxMessage(&hcan, CAN_RX_FIFO0, &rxHeader, data);
+	/**
+	 *  STM32 CAN receive message
+	 */
 
-    *id = rxHeader.StdId;	// received standard identifier
+	/* Get CAN received message */
+    HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &RxHeader, data);
+
+    /* Received standard identifier */
+    *id = RxHeader.StdId;
 
 	return CAN_STATUS_OK;
 }
@@ -134,86 +159,33 @@ can_status_t CAN_Wrapper_DataCount(void)
  **********************************************************************************************************************/
 
 /**
- * @brief STM32 CAN1 Initialization Function.
- *
- * @param None
- * @retval None
- */
-static void CAN_Init(void)
-{
-	hcan.Instance = CAN1;
-	hcan.Init.Prescaler = 16;
-	hcan.Init.Mode = CAN_MODE_NORMAL;
-	hcan.Init.SyncJumpWidth = CAN_SJW_1TQ;
-	hcan.Init.TimeSeg1 = CAN_BS1_1TQ;
-	hcan.Init.TimeSeg2 = CAN_BS2_1TQ;
-	hcan.Init.TimeTriggeredMode = DISABLE;
-	hcan.Init.AutoBusOff = DISABLE;
-	hcan.Init.AutoWakeUp = DISABLE;
-	hcan.Init.AutoRetransmission = DISABLE;
-	hcan.Init.ReceiveFifoLocked = DISABLE;
-	hcan.Init.TransmitFifoPriority = DISABLE;
-	if (HAL_CAN_Init(&hcan) != HAL_OK)
-	{
-		Error_Handler();
-	}
-}
-
-/**
- * @brief STM32 CAN1 Filter Configuration Function.
+ * @brief CAN Filter Configuration Function
  *
  * @param None
  * @retval None
  */
 static void CAN_FilterConfig(void)
 {
-	aFilterConfig.FilterBank = 0;
-	aFilterConfig.FilterActivation = CAN_FILTER_ENABLE;
-	aFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-	aFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-	aFilterConfig.FilterScale = CAN_FILTERSCALE_16BIT;
-	aFilterConfig.SlaveStartFilterBank = 14;
+	/**
+	 *  STM32 CAN filter configuration
+	 */
 
-	//aFilterConfig.FilterIdHigh = ID_PEDAL<<5;
-	aFilterConfig.FilterIdLow = 0x000;
-	//aFilterConfig.FilterMaskIdHigh = ID_PEDAL<<5;
-	aFilterConfig.FilterMaskIdLow = 0x000;
+	/* CAN filter configuration structure */
+	sFilterConfig.FilterActivation = CAN_FILTER_ENABLE;
+	sFilterConfig.FilterBank = 0;							// CAN 1 [0..13]
+	sFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
 
-	HAL_CAN_ConfigFilter(&hcan, &aFilterConfig);
+	sFilterConfig.FilterIdHigh = 0;							// msg_id << 5;
+	sFilterConfig.FilterIdLow = 0;
+	sFilterConfig.FilterMaskIdHigh = 0; 					// msg_id << 5;
+	sFilterConfig.FilterMaskIdLow = 0x0000;
+	sFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
+	sFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
+	sFilterConfig.SlaveStartFilterBank = 20;
 
-	aFilterConfig.FilterActivation = CAN_FILTER_ENABLE;
-	aFilterConfig.FilterBank = 1;
-	aFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-	aFilterConfig.FilterMode = CAN_FILTERMODE_IDLIST;
-	aFilterConfig.FilterScale = CAN_FILTERSCALE_16BIT;
-	//aFilterConfig.FilterIdHigh = ID_CORRIENTE_BMS<<5;
-	//aFilterConfig.FilterIdLow = ID_POTENCIA_BMS<<5;
-	//aFilterConfig.FilterMaskIdHigh = ID_NIVEL_BATERIA_BMS<<5;
-	//aFilterConfig.FilterMaskIdLow = ID_VELOCIDAD_INV<<5;
-	//aFilterConfig.SlaveStartFilterBank = 14;
-
-	HAL_CAN_ConfigFilter(&hcan, &aFilterConfig);
+	/* Configure CAN filter */
+	if (HAL_CAN_ConfigFilter(&hcan1, &sFilterConfig)!= HAL_OK)
+	{
+		Error_Handler();
+	}
 }
-
-/**
- * @brief STM32 CAN1 Enable Interrupt
- *
- * @param None
- * @retval None
- */
-static void CAN_ActivateNotification(void)
-{
-	HAL_CAN_ActivateNotification(&hcan, CAN_IT_RX_FIFO0_MSG_PENDING);
-}
-
-/**
- * @brief STM32 CAN1 Start the CAN Module
- *
- * @param None
- * @retval None
- */
-static void CAN_Start(void)
-{
-	HAL_CAN_Start(&hcan);
-}
-

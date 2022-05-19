@@ -1,9 +1,9 @@
 /**
  * @file can_wrapper.h
  * @author Subgrupo Control y Periféricos - Elektron Motorsports
- * @brief Declaraciones funciones wrapper CAN para tarjeta de Control
+ * @brief Archivo header para can_wrapper.c
  * @version 0.1
- * @date 2022-04-18
+ * @date 2022-18-05
  *
  * @copyright Copyright (c) 2022
  *
@@ -15,6 +15,9 @@
 /***********************************************************************************************************************
  * Included files
  **********************************************************************************************************************/
+
+#include "can.h"
+#include "tim.h"
 
 #include "can_api.h"
 

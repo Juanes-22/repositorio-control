@@ -77,6 +77,7 @@ typedef struct
     uint8_t payload_buff[PAYLOAD_MAX_LENGTH];   /**< Payload */
 
     uint8_t payload_length;     /**< Length of payload in bytes */
+
 } can_frame_t;
 
 /**
@@ -118,6 +119,7 @@ typedef struct
     read_can_data_t Fn_Read_Can_Data;   /**< CAN read data driver function */
 
     get_msg_count_t Fn_Get_Msg_Count;   /**< CAN get message count driver function */
+
 } CAN_t;
 
 /***********************************************************************************************************************
