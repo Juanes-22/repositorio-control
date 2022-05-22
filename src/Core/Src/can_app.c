@@ -19,6 +19,12 @@
  * Private macros
  **********************************************************************************************************************/
 
+/* CAN number of messages to transmit */
+#define CAN_NUM_OF_MSGS				6
+
+/* CAN messages transmission interval in ms */
+#define CAN_TRANSMIT_INTERVAL_MS	100
+
 /***********************************************************************************************************************
  * Private variables definitions
  **********************************************************************************************************************/
@@ -83,70 +89,35 @@ void CAN_APP_Process(void)
  */
 void CAN_APP_Send_BusData(typedef_bus2_t *bus_can_output)
 {
-	/* --------------- Send autokill --------------- */
+	uint32_t can_ids_array[CAN_NUM_OF_MSGS] = { CAN_ID_AUTOKILL,
+												CAN_ID_ESTADO_MANEJO,
+												CAN_ID_ESTADO_FALLA,
+												CAN_ID_NIVEL_VELOCIDAD,
+												CAN_ID_BOOST_ENABLE,
+												CAN_ID_CONTROL_OK
+												};
 
-	can_obj.Frame.id = CAN_ID_AUTOKILL;
-	can_obj.Frame.payload_length = 1;
-	can_obj.Frame.payload_buff[0] = bus_can_output->autokill;
+	uint8_t can_values_array[CAN_NUM_OF_MSGS] = { 	bus_can_output->autokill,
+													bus_can_output->estado_manejo,
+													bus_can_output->estado_falla,
+													bus_can_output->nivel_velocidad,
+													bus_can_output->boost_enable,
+													bus_can_output->control_ok
+													};
 
-	if( CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK )
+	/* Send bus variables */
+	for (int i=0; i<CAN_NUM_OF_MSGS; i++)
 	{
-		Error_Handler();
-	}
+		can_obj.Frame.id = can_ids_array[i];
+		can_obj.Frame.payload_length = 1;
+		can_obj.Frame.payload_buff[0] = can_values_array[i];
 
-	/* ------------- Send estado_manejo ------------- */
+		if( CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK )
+		{
+			Error_Handler();
+		}
 
-	can_obj.Frame.id = CAN_ID_ESTADO_MANEJO;
-	can_obj.Frame.payload_length = 1;
-	can_obj.Frame.payload_buff[0] = bus_can_output->estado_manejo;
-
-	if( CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK )
-	{
-		Error_Handler();
-	}
-
-	/* ------------- Send estado_falla ------------- */
-
-	can_obj.Frame.id = CAN_ID_ESTADO_FALLA;
-	can_obj.Frame.payload_length = 1;
-	can_obj.Frame.payload_buff[0] = bus_can_output->estado_falla;
-
-	if( CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK )
-	{
-		Error_Handler();
-	}
-
-	/* ------------ Send nivel_velocidad ------------ */
-
-	can_obj.Frame.id = CAN_ID_NIVEL_VELOCIDAD;
-	can_obj.Frame.payload_length = 1;
-	can_obj.Frame.payload_buff[0] = bus_can_output->nivel_velocidad;
-
-	if( CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK )
-	{
-		Error_Handler();
-	}
-
-	/* ------------- Send boost_enable ------------- */
-
-	can_obj.Frame.id = CAN_ID_BOOST_ENABLE;
-	can_obj.Frame.payload_length = 1;
-	can_obj.Frame.payload_buff[0] = bus_can_output->boost_enable;
-
-	if( CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK )
-	{
-		Error_Handler();
-	}
-
-	/* -------------- Send control_ok -------------- */
-
-	can_obj.Frame.id = CAN_ID_CONTROL_OK;
-	can_obj.Frame.payload_length = 1;
-	can_obj.Frame.payload_buff[0] = bus_can_output->control_ok;
-
-	if( CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK )
-	{
-		Error_Handler();
+		HAL_Delay(CAN_TRANSMIT_INTERVAL_MS);
 	}
 }
 

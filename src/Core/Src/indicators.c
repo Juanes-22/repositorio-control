@@ -1,7 +1,7 @@
 /**
  * @file indicators.c
  * @author Subgrupo Control y Periféricos - Elektron Motorsports
- * @brief Generación de indicadores de Control
+ * @brief Generación de indicadores de tarjeta Control
  * @version 0.1
  * @date 2022-05-05
  *
@@ -52,6 +52,7 @@
  */
 void INDICATORS_Process(void)
 {
+	/*
     if(bus_data.driving_mode == kDRIVING_MODE_ECO)
     {
         BSP_LED_On(LED1);
@@ -79,6 +80,8 @@ void INDICATORS_Process(void)
 
         // blink buzzer
     }
+    */
+	asm("nop");
 }
 
 /**

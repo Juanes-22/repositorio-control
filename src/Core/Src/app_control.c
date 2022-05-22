@@ -164,7 +164,7 @@ void MX_APP_Process(void)
 
 		RAMPA_PEDAL_Process();
 
-	    //INDICATORS_Process();
+	    INDICATORS_Process();
 
 	    CAN_APP_Process();
 
