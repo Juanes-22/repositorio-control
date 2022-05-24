@@ -19,15 +19,26 @@
  * Private macros
  **********************************************************************************************************************/
 
-/* CAN number of messages to transmit */
-#define CAN_NUM_OF_MSGS				6
+/** @brief CAN number of messages to transmit */
+#define CAN_NUM_OF_MSGS                 6
 
-/* CAN messages transmission interval in ms */
-#define CAN_TRANSMIT_INTERVAL_MS	100
+/** @brief CAN messages transmission interval in ms */
+#define CAN_TRANSMIT_INTERVAL_MS        100
 
 /***********************************************************************************************************************
  * Private variables definitions
  **********************************************************************************************************************/
+
+/** @brief Array of CAN message's IDs to transmit */
+static uint32_t can_ids_array[CAN_NUM_OF_MSGS] = {CAN_ID_AUTOKILL,
+                                                  CAN_ID_ESTADO_MANEJO,
+                                                  CAN_ID_ESTADO_FALLA,
+                                                  CAN_ID_NIVEL_VELOCIDAD,
+                                                  CAN_ID_HOMBRE_MUERTO,
+                                                  CAN_ID_CONTROL_OK};
+                                                  
+/** @brief Array of CAN message's values to transmit */
+static uint8_t can_values_array[CAN_NUM_OF_MSGS];
 
 /***********************************************************************************************************************
  * Private functions prototypes
@@ -40,7 +51,7 @@ static void CAN_APP_Store_ReceivedMessage(void);
  **********************************************************************************************************************/
 
 /**
- * @brief Función principal de CAN a nivel de aplicación
+ * @brief Función principal de CAN a nivel de aplicación.
  *
  * Guarda mensaje CAN recibido en bus de entrada CAN cuando se activa
  * bandera de recepción. Envía datos de bus de salida CAN cuando se
@@ -53,28 +64,28 @@ static void CAN_APP_Store_ReceivedMessage(void);
  */
 void CAN_APP_Process(void)
 {
-	/* Recibió mensaje CAN */
-	if(flag_rx_can == CAN_MSG_RECEIVED)
-	{
-		/* Guarda mensaje CAN recibido en bus de entrada CAN */
-		CAN_APP_Store_ReceivedMessage();
+    /* Recibió mensaje CAN */
+    if (flag_rx_can == CAN_MSG_RECEIVED)
+    {
+        /* Guarda mensaje CAN recibido en bus de entrada CAN */
+        CAN_APP_Store_ReceivedMessage();
 
-		/* Clear CAN received message flag */
-		flag_rx_can = CAN_MSG_NOT_RECEIVED;
+        /* Clear CAN received message flag */
+        flag_rx_can = CAN_MSG_NOT_RECEIVED;
 
-		/* Activa bandera para decodificar */
-		flag_decodificar = DECODIFICA;
-	}
+        /* Activa bandera para decodificar */
+        flag_decodificar = DECODIFICA;
+    }
 
-	/* Hubo trigger para transmisión mensaje CAN */
-	if(flag_tx_can == CAN_TX_READY)
-	{
-		/* Envío de datos del bus de salida CAN a módulo CAN */
-		CAN_APP_Send_BusData(&bus_can_output);
+    /* Hubo trigger para transmisión mensaje CAN */
+    if (flag_tx_can == CAN_TX_READY)
+    {
+        /* Envío de datos del bus de salida CAN a módulo CAN */
+        CAN_APP_Send_BusData(&bus_can_output);
 
-		/* Clear CAN TX ready flag */
-		flag_rx_can = CAN_TX_NOT_READY;
-	}
+        /* Clear CAN TX ready flag */
+        flag_rx_can = CAN_TX_NOT_READY;
+    }
 }
 
 /**
@@ -89,36 +100,27 @@ void CAN_APP_Process(void)
  */
 void CAN_APP_Send_BusData(typedef_bus2_t *bus_can_output)
 {
-	uint32_t can_ids_array[CAN_NUM_OF_MSGS] = { CAN_ID_AUTOKILL,
-												CAN_ID_ESTADO_MANEJO,
-												CAN_ID_ESTADO_FALLA,
-												CAN_ID_NIVEL_VELOCIDAD,
-												CAN_ID_BOOST_ENABLE,
-												CAN_ID_CONTROL_OK
-												};
+	can_values_array[0] = bus_can_output->autokill;
+	can_values_array[1] = bus_can_output->estado_manejo;
+	can_values_array[2] = bus_can_output->estado_falla;
+	can_values_array[3] = bus_can_output->nivel_velocidad;
+	can_values_array[4] = bus_can_output->hombre_muerto;
+	can_values_array[5] = bus_can_output->control_ok;
 
-	uint8_t can_values_array[CAN_NUM_OF_MSGS] = { 	bus_can_output->autokill,
-													bus_can_output->estado_manejo,
-													bus_can_output->estado_falla,
-													bus_can_output->nivel_velocidad,
-													bus_can_output->boost_enable,
-													bus_can_output->control_ok
-													};
+    /* Send bus variables */
+    for (int i = 0; i < CAN_NUM_OF_MSGS; i++)
+    {
+        can_obj.Frame.id = can_ids_array[i];
+        can_obj.Frame.payload_length = 1;
+        can_obj.Frame.payload_buff[0] = can_values_array[i];
 
-	/* Send bus variables */
-	for (int i=0; i<CAN_NUM_OF_MSGS; i++)
-	{
-		can_obj.Frame.id = can_ids_array[i];
-		can_obj.Frame.payload_length = 1;
-		can_obj.Frame.payload_buff[0] = can_values_array[i];
+        if (CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK)
+        {
+            Error_Handler();
+        }
 
-		if( CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK )
-		{
-			Error_Handler();
-		}
-
-		HAL_Delay(CAN_TRANSMIT_INTERVAL_MS);
-	}
+        HAL_Delay(CAN_TRANSMIT_INTERVAL_MS);
+    }
 }
 
 /***********************************************************************************************************************
@@ -128,19 +130,19 @@ void CAN_APP_Send_BusData(typedef_bus2_t *bus_can_output)
 /* Guardar mensaje CAN recibido en bus de entrada CAN */
 static void CAN_APP_Store_ReceivedMessage(void)
 {
-	/* Según standard identifier que se recibió, guarda dato en variables de bus de recepción CAN */
-	switch(can_obj.Frame.id)
-	{
+    /* Según standard identifier que se recibió, guarda dato en variables de bus de recepción CAN */
+    switch (can_obj.Frame.id)
+    {
 
     /* ------------------------------ Periféricos ------------------------------ */
 
-    case CAN_ID_PEDAL:
+    case CAN_ID_PERIFERICOS_PEDAL:
         bus_can_input.pedal = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_HOMBRE_MUERTO:
+    case CAN_ID_PERIFERICOS_HOMBRE_MUERTO:
         bus_can_input.hombre_muerto = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_BOTONES_CAMBIO_ESTADO:
+    case CAN_ID_PERIFERICOS_BOTONES_CAMBIO_ESTADO:
         bus_can_input.botones_cambio_estado = can_obj.Frame.payload_buff[0];
         break;
     case CAN_ID_PERIFERICOS_OK:
@@ -149,22 +151,22 @@ static void CAN_APP_Store_ReceivedMessage(void)
 
     /* ---------------------------------- BMS ---------------------------------- */
 
-    case CAN_ID_VOLTAJE_BMS:
+    case CAN_ID_BMS_VOLTAJE:
         bus_can_input.voltaje_bms = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_CORRIENTE_BMS:
+    case CAN_ID_BMS_CORRIENTE:
         bus_can_input.corriente_bms = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_VOLTAJE_MIN_CELDA_BMS:
+    case CAN_ID_BMS_VOLTAJE_MIN_CELDA:
         bus_can_input.voltaje_min_celda_bms = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_POTENCIA_BMS:
+    case CAN_ID_BMS_POTENCIA:
         bus_can_input.potencia_bms = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_T_MAX_BMS:
+    case CAN_ID_BMS_T_MAX:
         bus_can_input.t_max_bms = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_NIVEL_BATERIA_BMS:
+    case CAN_ID_BMS_NIVEL_BATERIA:
         bus_can_input.nivel_bateria_bms = can_obj.Frame.payload_buff[0];
         break;
     case CAN_ID_BMS_OK:
@@ -173,41 +175,47 @@ static void CAN_APP_Store_ReceivedMessage(void)
 
     /* --------------------------------- DCDC ---------------------------------- */
 
-    case CAN_ID_VOLTAJE_BATERIA_DCDC:
+    case CAN_ID_DCDC_VOLTAJE_BATERIA:
         bus_can_input.voltaje_bateria_dcdc = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_VOLTAJE_SALIDA_DCDC:
+    case CAN_ID_DCDC_VOLTAJE_SALIDA:
         bus_can_input.voltaje_salida_dcdc = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_T_MAX_DCDC:
+    case CAN_ID_DCDC_T_MAX:
         bus_can_input.t_max_dcdc = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_POTENCIA_DCDC:
+    case CAN_ID_DCDC_POTENCIA:
         bus_can_input.potencia_dcdc = can_obj.Frame.payload_buff[0];
+        break;
+    case CAN_ID_DCDC_OK:
+        bus_can_input.dcdc_ok = can_obj.Frame.payload_buff[0];
         break;
 
     /* -------------------------------- Inversor ------------------------------- */
 
-    case CAN_ID_VELOCIDAD_INVERSOR:
+    case CAN_ID_INVERSOR_VELOCIDAD:
         bus_can_input.velocidad_inv = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_V_INVERSOR:
+    case CAN_ID_INVERSOR_V:
         bus_can_input.V_inv = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_I_INVERSOR:
+    case CAN_ID_INVERSOR_I:
         bus_can_input.I_inv = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_TEMP_MAX_INVERSOR:
+    case CAN_ID_INVERSOR_TEMP_MAX:
         bus_can_input.temp_max_inv = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_TEMP_MOTOR_INVERSOR:
+    case CAN_ID_INVERSOR_TEMP_MOTOR:
         bus_can_input.temp_motor_inv = can_obj.Frame.payload_buff[0];
         break;
-    case CAN_ID_POTENCIA_INVERSOR:
+    case CAN_ID_INVERSOR_POTENCIA:
         bus_can_input.potencia_inv = can_obj.Frame.payload_buff[0];
         break;
     case CAN_ID_INVERSOR_OK:
         bus_can_input.inversor_ok = can_obj.Frame.payload_buff[0];
         break;
-	}
+
+    default:
+        break;
+    }
 }

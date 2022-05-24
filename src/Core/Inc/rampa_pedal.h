@@ -33,15 +33,10 @@
  * función de transferencia diferente para determinar el valor de velocidad asociado al
  * valor de pedal registrado desde periféricos.
  *
- * Lee la variable pedal de la estructura de variables decodificadas de periféricos,
- * es decir, la estructura de tipo rx_peripherals_t que se encuentra en el bus_data.
- *
- * Escribe en la variable velocidad del bus_data.
- *
  * No es static, por lo que puede ser usada por otros archivos.
  *
- * @param None
- * @retval None
+ * @param   None
+ * @retval  None
  */
 void RAMPA_PEDAL_Process(void);
 

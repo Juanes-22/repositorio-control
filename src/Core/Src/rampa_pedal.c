@@ -23,7 +23,7 @@
  * Private variables definitions
  **********************************************************************************************************************/
 
-/** @brief Puntero a estructura de tipo rx_peripherals_vars_t que contiene los valores de las variables decodificadas de periféricos */
+/** Puntero a estructura de tipo rx_peripherals_vars_t que contiene los valores de las variables decodificadas de periféricos */
 static rx_peripherals_vars_t* Rx_Peripherals = &bus_data.Rx_Peripherals;
 
 /***********************************************************************************************************************
@@ -51,13 +51,6 @@ static void RAMPA_PEDAL_Send_Velocidad(float to_send, typedef_bus2_t* bus_can_ou
  * velocidad que será empleado por inversor. Para cada modo de manejo se tiene una
  * función de transferencia diferente para determinar el valor de velocidad asociado al
  * valor de pedal registrado desde periféricos.
- *
- * Lee la variable pedal de la estructura de variables decodificadas de periféricos,
- * es decir, la estructura de tipo rx_peripherals_vars_t que se encuentra en el bus_data.
- *
- * Escribe en la variable velocidad_inversor del bus_data.
- *
- * Escribe en la variable nivel_velocidad del bus_can_output.
  *
  * No es static, por lo que puede ser usada por otros archivos.
  *
@@ -217,10 +210,10 @@ static float RAMPA_PEDAL_Get_Rampa_HombreMuerto(rx_var_t pedal) {
 }
 
 /**
- * @brief Envío de velocidad a bus de datos y a bus de salida can.
+ * @brief Envío de velocidad a bus de datos y a bus de salida CAN.
  *
  * @param to_send           Velocidad a enviar
- * @param bus_can_output    Puntero a estructura de tipo typedef_bus2_t (bus de salida can)
+ * @param bus_can_output    Puntero a estructura de tipo typedef_bus2_t (bus de salida CAN)
  */
 static void RAMPA_PEDAL_Send_Velocidad(float to_send, typedef_bus2_t* bus_can_output)
 {

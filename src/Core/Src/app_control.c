@@ -101,13 +101,13 @@ void MX_APP_Process(void)
 	switch (app_state)
 	{
 
-	/* Estado esperando respuesta ECHO a Tarjetas: BMS, DCDC, Inversor, Perifericos */
+	/* Estado esperando respuesta ECHO a tarjetas: BMS, DCDC, Inversor, Perifericos */
 	case kWAITING_ECHO_RESPONSE:
 
 		/* Envía echo a demás tarjetas */
 		MX_APP_Send_Echo(&bus_can_output);
 
-		/* Get ticks for counting of timeout */
+		/* Get ticks for timeout counting */
 		tickstart = HAL_GetTick();
 
 		while(1)
@@ -115,12 +115,13 @@ void MX_APP_Process(void)
 			/* LEDs para indicar confirmación de módulos */
 			INDICATORS_Update_ModulesLEDs();
 
+			/* Hay timeout? */
 			if( (HAL_GetTick() - tickstart) > TIMEOUT_VALUE )
 			{
 				time_out = true;
 			}
 
-			/* Si todos los módulos OK, control está listo */
+			/* Si todos los módulos responden OK, Control está listo */
 			if (bus_can_input.bms_ok == CAN_VALUE_MODULE_OK &&
                 bus_can_input.dcdc_ok == CAN_VALUE_MODULE_OK &&
                 bus_can_input.inversor_ok == CAN_VALUE_MODULE_OK &&
@@ -142,6 +143,7 @@ void MX_APP_Process(void)
 			}
 			else if(time_out)
 			{
+				/* Envía echo a demás tarjetas, de nuevo */
 				MX_APP_Send_Echo(&bus_can_output);
 
 				tickstart = HAL_GetTick();
@@ -151,7 +153,7 @@ void MX_APP_Process(void)
 		}
 		break;
 
-	/* Estado Tarjeta de Control running */
+	/* Estado tarjeta de Control running */
 	case kRUNNING:
 
 		DECODE_DATA_Process();
@@ -166,7 +168,28 @@ void MX_APP_Process(void)
 
 	    INDICATORS_Process();
 
-	    CAN_APP_Process();
+	    //CAN_APP_Process();
+
+	    if (flag_rx_can == CAN_MSG_RECEIVED) 
+		{
+	    	flag_rx_can = CAN_MSG_NOT_RECEIVED;
+
+	    	BSP_LED_Toggle(LED2);
+	    }
+
+		switch (bus_data.Rx_Peripherals.hombre_muerto)
+		{
+		case kHOMBRE_MUERTO_ON:
+			bus_can_output.hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_ON;
+			break;
+
+		case kHOMBRE_MUERTO_OFF:
+			bus_can_output.hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_OFF;
+			break;
+
+		default:
+			break;
+		}
 
 		break;
 	}

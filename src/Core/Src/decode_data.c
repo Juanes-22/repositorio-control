@@ -22,16 +22,16 @@
 /** @brief Bandera para ejecutar bloque de decodificación de datos */
 decode_status_t flag_decodificar = NO_DECODIFICA;
 
-/** @brief Puntero a estructura de tipo rx_peripherals_vars_t que contiene los valores de las variables decodificadas de Periféricos */
+/* Puntero a estructura de tipo rx_peripherals_vars_t que contiene los valores de las variables decodificadas de Periféricos */
 static rx_peripherals_vars_t* Rx_Peripherals = &bus_data.Rx_Peripherals;
 
-/** @brief Puntero a estructura de tipo rx_bms_vars_t que contiene los valores de las variables decodificadas de BMS */
+/* Puntero a estructura de tipo rx_bms_vars_t que contiene los valores de las variables decodificadas de BMS */
 static rx_bms_vars_t* Rx_Bms = &bus_data.Rx_Bms;
 
-/** @brief Puntero a estructura de tipo rx_dcdc_vars_t que contiene los valores de las variables decodificadas de DCDC */
+/* Puntero a estructura de tipo rx_dcdc_vars_t que contiene los valores de las variables decodificadas de DCDC */
 static rx_dcdc_vars_t* Rx_Dcdc = &bus_data.Rx_Dcdc;
 
-/** @brief Puntero a estructura de tipo rx_inversor_vars_t que contiene los valores de las variables decodificadas de Inversor */
+/* Puntero a estructura de tipo rx_inversor_vars_t que contiene los valores de las variables decodificadas de Inversor */
 static rx_inversor_vars_t* Rx_Inversor = &bus_data.Rx_Inversor;
 
 /***********************************************************************************************************************
@@ -67,11 +67,8 @@ void DECODE_DATA_Process(void)
     if (flag_decodificar == DECODIFICA)
     {
     	DECODE_DATA_Decode_Bms();
-
         DECODE_DATA_Decode_Dcdc();
-
     	DECODE_DATA_Decode_Inversor();
-
         DECODE_DATA_Decode_Perifericos();
 
         flag_decodificar = NO_DECODIFICA;
@@ -105,15 +102,10 @@ static void DECODE_DATA_Decode_Bms(void)
 
     /* Decodifica las variables analógicas de BMS */
     Rx_Bms->voltaje = (rx_var_t)bus_can_input.voltaje_bms;
-
     Rx_Bms->corriente = (rx_var_t)bus_can_input.corriente_bms;
-
     Rx_Bms->voltaje_min_celda = (rx_var_t)bus_can_input.voltaje_min_celda_bms;
-
     Rx_Bms->potencia = (rx_var_t)bus_can_input.potencia_bms;
-
     Rx_Bms->t_max = (rx_var_t)bus_can_input.t_max_bms;
-
     Rx_Bms->nivel_bateria = (rx_var_t)bus_can_input.nivel_bateria_bms;
 }
 
@@ -140,11 +132,8 @@ static void DECODE_DATA_Decode_Dcdc(void)
 
     /* Decodifica las variables analógicas de DCDC */
     Rx_Dcdc->voltaje_bateria = (rx_var_t)bus_can_input.voltaje_bateria_dcdc;
-
     Rx_Dcdc->voltaje_salida = (rx_var_t)bus_can_input.voltaje_salida_dcdc;
-
     Rx_Dcdc->t_max = (rx_var_t)bus_can_input.t_max_dcdc;
-
     Rx_Dcdc->potencia = (rx_var_t)bus_can_input.potencia_dcdc;
 }
 
@@ -171,15 +160,10 @@ static void DECODE_DATA_Decode_Inversor(void)
 
 	/* Decodifica las variables analógicas de Inversor */
     Rx_Inversor->velocidad = (rx_var_t)bus_can_input.velocidad_inv;
-
     Rx_Inversor->V = (rx_var_t)bus_can_input.V_inv;
-
     Rx_Inversor->I = (rx_var_t)bus_can_input.I_inv;
-
     Rx_Inversor->temp_max = (rx_var_t)bus_can_input.temp_max_inv;
-
     Rx_Inversor->temp_motor = (rx_var_t)bus_can_input.temp_motor_inv;
-
     Rx_Inversor->potencia = (rx_var_t)bus_can_input.potencia_inv;
 }
 
@@ -216,10 +200,10 @@ static void DECODE_DATA_Decode_Perifericos(void)
     /* Decodifica estado de hombre muerto */
     switch (bus_can_input.hombre_muerto)
     {
-    case CAN_VALUE_HM_PRESSED:
+    case CAN_VALUE_HOMBRE_MUERTO_ON:
         Rx_Peripherals->hombre_muerto = kHOMBRE_MUERTO_ON;
         break;
-    case CAN_VALUE_HM_NOT_PRESSED:
+    case CAN_VALUE_HOMBRE_MUERTO_OFF:
         Rx_Peripherals->hombre_muerto = kHOMBRE_MUERTO_OFF;
     }
 

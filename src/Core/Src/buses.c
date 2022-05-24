@@ -22,49 +22,43 @@
 /* Inicialización de bus de datos (bus 1) */
 typedef_bus1_t bus_data =
 {
-		/* Variable modo de manejo */
-		.driving_mode = kDRIVING_MODE_NORMAL,
+	/* Variables modo de manejo y fallas */
+	.driving_mode = kDRIVING_MODE_NORMAL,
+	.failure = kFAILURE_CAUTION1,
 
-		/* Variable falla */
-		.failure = kFAILURE_CAUTION1,
+	/* Variable velocidad [0:100] */
+	.velocidad_inversor = 0U,
 
-		/* Variable velocidad */
-		.velocidad_inversor = 0U,
+	/* Estructuras con variables decodificadas de los módulos */
+	.Rx_Peripherals =
+	{
+		.botones_cambio_estado = kBTN_NONE,
+		.hombre_muerto = kHOMBRE_MUERTO_OFF,
+		.perifericos_ok = kMODULE_INFO_OK
+	},
+	.Rx_Bms = {.bms_ok = kMODULE_INFO_OK},
+	.Rx_Dcdc = {.dcdc_ok = kMODULE_INFO_OK},
+	.Rx_Inversor = {.inversor_ok = kMODULE_INFO_OK},
 
-		/* Estructura de periféricos */
-		.Rx_Peripherals = 
-		{
-			.botones_cambio_estado = kBTN_NONE, 
-			.hombre_muerto = kHOMBRE_MUERTO_OFF, 
-			.perifericos_ok = kMODULE_INFO_OK
-		},
+	/* Estructuras con estados de las variables decodificadas de los módulos */
+	.St_Bms = {kVAR_STATE_DATA_PROBLEM},
+	.St_Dcdc = {kVAR_STATE_DATA_PROBLEM},
+	.St_Inversor = {kVAR_STATE_DATA_PROBLEM},
 
-		/* Estructuras de BMS */
-		.Rx_Bms = {.bms_ok = kMODULE_INFO_OK},
-		.St_Bms = {kVAR_STATE_DATA_PROBLEM},
-
-		/* Estructuras de DCDC */
-		.Rx_Dcdc = {.dcdc_ok = kMODULE_INFO_OK},
-		.St_Dcdc = {kVAR_STATE_DATA_PROBLEM},
-
-		/* Estructuras de inversor */
-		.Rx_Inversor = {.inversor_ok = kMODULE_INFO_OK},
-		.St_Inversor = {kVAR_STATE_DATA_PROBLEM},
-
-		/* Variables estado general de cada módulo */
-		.bms_status = kMODULE_STATUS_DATA_PROBLEM,
-		.dcdc_status = kMODULE_STATUS_DATA_PROBLEM,
-		.inversor_status = kMODULE_STATUS_DATA_PROBLEM,
+	/* Variables estado general de cada módulo */
+	.bms_status = kMODULE_STATUS_DATA_PROBLEM,
+	.dcdc_status = kMODULE_STATUS_DATA_PROBLEM,
+	.inversor_status = kMODULE_STATUS_DATA_PROBLEM,
 };
 
 /* Inicialización de bus de salida CAN (bus 2) */
-typedef_bus2_t bus_can_output = 
+typedef_bus2_t bus_can_output =
 {
 	.autokill = CAN_VALUE_AUTOKILL_OFF,
 	.estado_manejo = CAN_VALUE_DRIVING_MODE_NORMAL,
 	.estado_falla = CAN_VALUE_FAILURE_CAUTION1,
-	.nivel_velocidad = 0U,
-	.boost_enable = CAN_VALUE_BOOST_OFF,
+	.nivel_velocidad = 0,
+	.hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_OFF,
 	.control_ok = CAN_VALUE_MODULE_IDLE
 };
 

@@ -19,14 +19,14 @@
  * Private macros
  **********************************************************************************************************************/
 
-/** @brief Duración de blink de los LEDs */
-#define BLINK_TIME              250U
+/** @brief Duración de blink de los LEDs en ms */
+#define BLINK_TIME                  250U
 
-/** @brief Duración para apagado de los LEDs */
-#define LEDS_TURNOFF_TIME       3000U
+/** @brief Duración para apagado de los LEDs en ms */
+#define LEDS_TURNOFF_TIME           3000U
 
-/** @brief Duración para apagado del buzzer */
-#define BUZZER_TURNOFF_TIME     2000U
+/** @brief Duración para apagado del buzzer en ms */
+#define BUZZER_TURNOFF_TIME         2000U
 
 /***********************************************************************************************************************
  * Private variables definitions
@@ -126,9 +126,11 @@ void INDICATORS_Finish_StartUp(void)
 
     BSP_BUZZER_On();
 
-    tickstart = HAL_GetTick();      // get ticks for the turn off time of LEDs and buzzer
+    /* Get ticks for the turn off time of LEDs and buzzer */
+    tickstart = HAL_GetTick();
 
-    blink_tickstart = tickstart;    // ticks for the blinking of the LEDs
+    /* Ticks for the blinking of the LEDs */
+    blink_tickstart = tickstart;
 
     BSP_LED_Off(LED1);
     BSP_LED_Off(LED2);

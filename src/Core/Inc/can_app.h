@@ -30,7 +30,7 @@
  **********************************************************************************************************************/
 
 /**
- * @brief Función principal de CAN a nivel de aplicación
+ * @brief Función principal de CAN a nivel de aplicación.
  *
  * Guarda mensaje CAN recibido en bus de entrada CAN cuando se activa
  * bandera de recepción. Envía datos de bus de salida CAN cuando se

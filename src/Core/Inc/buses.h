@@ -29,7 +29,7 @@
  */
 typedef struct bus1
 {
-    /* Variables máquinas modo de manejo y de fallas */
+    /* Variables modo de manejo y fallas */
     driving_mode_t          driving_mode;
     failure_t               failure;
 
@@ -64,7 +64,7 @@ typedef struct bus2
     uint8_t  estado_manejo; 	        /**< CAN  0x010 */
     uint8_t  estado_falla; 		        /**< CAN  0x011 */
     uint8_t  nivel_velocidad;	        /**< CAN  0x012 */
-    uint8_t  boost_enable;		        /**< CAN  0x013 */
+    uint8_t  hombre_muerto;		        /**< CAN  0x013 */
     uint8_t  control_ok;		        /**< CAN  0x014 */
 
 } typedef_bus2_t;
