@@ -1,6 +1,6 @@
-rampa_pedal.c:67:6:RAMPA_PEDAL_Process	8	static
-rampa_pedal.c:113:14:RAMPA_PEDAL_Get_Rampa_Eco	24	static
-rampa_pedal.c:147:14:RAMPA_PEDAL_Get_Rampa_Normal	24	static
-rampa_pedal.c:181:14:RAMPA_PEDAL_Get_Rampa_Sport	24	static
-rampa_pedal.c:215:14:RAMPA_PEDAL_Get_Rampa_HombreMuerto	16	static
-rampa_pedal.c:225:13:RAMPA_PEDAL_Send_Velocidad	16	static
+rampa_pedal.c:60:6:RAMPA_PEDAL_Process	8	static
+rampa_pedal.c:106:14:RAMPA_PEDAL_Get_Rampa_Eco	24	static
+rampa_pedal.c:140:14:RAMPA_PEDAL_Get_Rampa_Normal	24	static
+rampa_pedal.c:174:14:RAMPA_PEDAL_Get_Rampa_Sport	24	static
+rampa_pedal.c:208:14:RAMPA_PEDAL_Get_Rampa_HombreMuerto	16	static
+rampa_pedal.c:218:13:RAMPA_PEDAL_Send_Velocidad	16	static

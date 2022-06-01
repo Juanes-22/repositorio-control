@@ -19,6 +19,9 @@
  * Private macros
  **********************************************************************************************************************/
 
+/** @brief Transmit message for CAN testing */
+#define SEND_TEST_MESSAGE		0
+
 /***********************************************************************************************************************
  * Private variables definitions
  **********************************************************************************************************************/
@@ -32,10 +35,12 @@ can_rx_status_t flag_rx_can = CAN_MSG_NOT_RECEIVED;
 /** @brief Bandera transmisión CAN */
 can_tx_status_t flag_tx_can = CAN_TX_READY;
 
+#if SEND_TEST_MESSAGE
 /** @brief ID para prueba comunicación CAN */
 uint8_t test_msg_id = 0x30;
 
 int i = 0;
+#endif
 
 /***********************************************************************************************************************
  * Private functions prototypes
@@ -81,6 +86,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan)
  */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 {
+#if SEND_TEST_MESSAGE
 	i++;
 
 	if(htim == &htim7 && i>5)
@@ -101,6 +107,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 			Error_Handler();
 		}
 	}
+#else
+		if(htim == &htim7)
+		{
+			/* Toggle LED 1 (Red LED) */
+			BSP_LED_Toggle(LED1);
+
+			/* The flag indicates that the callback was called */
+			flag_tx_can = CAN_TX_READY;
+		}
+#endif
 }
 
 /***********************************************************************************************************************
