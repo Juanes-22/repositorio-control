@@ -44,8 +44,6 @@ static int can_tx_flag_count = 0;
  * Private functions prototypes
  **********************************************************************************************************************/
 
-static void CAN_APP_Store_ReceivedMessage(void);
-
 /***********************************************************************************************************************
  * Public functions implementation
  **********************************************************************************************************************/
@@ -67,6 +65,9 @@ void CAN_APP_Process(void)
     /* Recibió mensaje CAN */
     if (flag_rx_can == CAN_MSG_RECEIVED)
     {
+		/* Toggle LED 2 (Red LED) */
+		BSP_LED_Toggle(LED2);
+
         /* Guarda mensaje CAN recibido en bus de entrada CAN */
         CAN_APP_Store_ReceivedMessage();
 
@@ -145,14 +146,18 @@ void CAN_APP_Send_BusData(typedef_bus2_t *bus_can_output)
 	}
 }
 
-/***********************************************************************************************************************
- * Private functions implementation
- **********************************************************************************************************************/
-
-/* Guardar en bus de entrada CAN el mensaje CAN recibido  */
-static void CAN_APP_Store_ReceivedMessage(void)
+/**
+ * @brief Función guardar mensaje CAN recibido en bus de entrada CAN.
+ *
+ * Según standard identifier que se recibió, guarda dato en variables de bus de recepción CAN.
+ *
+ * No es static, por lo que puede ser usada por otros archivos.
+ *
+ * @param None
+ * @retval None
+ */
+void CAN_APP_Store_ReceivedMessage(void)
 {
-    /* Según standard identifier que se recibió, guarda dato en variables de bus de recepción CAN */
     switch (can_obj.Frame.id)
     {
 
@@ -241,3 +246,7 @@ static void CAN_APP_Store_ReceivedMessage(void)
         break;
     }
 }
+
+/***********************************************************************************************************************
+ * Private functions implementation
+ **********************************************************************************************************************/

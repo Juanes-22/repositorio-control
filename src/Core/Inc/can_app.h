@@ -64,4 +64,17 @@ void CAN_APP_Process(void);
  */
 void CAN_APP_Send_BusData(typedef_bus2_t *bus_can_output);
 
+/**
+ * @brief Función guardar mensaje CAN recibido en bus de entrada CAN.
+ *
+ * Según standard identifier que se recibió, guarda dato en la variable correspondiente
+ * del bus de recepción CAN.
+ *
+ * No es static, por lo que puede ser usada por otros archivos.
+ *
+ * @param None
+ * @retval None
+ */
+void CAN_APP_Store_ReceivedMessage(void);
+
 #endif /* _CAN_APP_H_ */

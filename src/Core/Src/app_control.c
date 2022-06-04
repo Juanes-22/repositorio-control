@@ -112,16 +112,20 @@ void MX_APP_Process(void)
 
 		while(1)
 		{
-			/* LEDs para indicar confirmación de módulos */
+			/* Hay timeout? */
+			if( (HAL_GetTick() - tickstart) > TIMEOUT_VALUE ) time_out = true;
+
+		    /* Recibió mensaje CAN */
+		    if (flag_rx_can == CAN_MSG_RECEIVED)
+		    {
+		        CAN_APP_Store_ReceivedMessage();
+		        flag_rx_can = CAN_MSG_NOT_RECEIVED;
+		    }
+
+			/* LEDs para indicar confirmación de cada módulo */
 			INDICATORS_Update_ModulesLEDs();
 
-			/* Hay timeout? */
-			if( (HAL_GetTick() - tickstart) > TIMEOUT_VALUE )
-			{
-				time_out = true;
-			}
-
-			/* Si todos los módulos responden OK, Control está listo */
+			/* Si todos los módulos respondieron OK, Control está listo */
 			if (bus_can_input.bms_ok == CAN_VALUE_MODULE_OK &&
                 bus_can_input.dcdc_ok == CAN_VALUE_MODULE_OK &&
                 bus_can_input.inversor_ok == CAN_VALUE_MODULE_OK &&
@@ -157,19 +161,19 @@ void MX_APP_Process(void)
 	/* Estado tarjeta de Control running */
 	case kRUNNING:
 
+		CAN_APP_Process();
+
 		DECODE_DATA_Process();
 
-		DRIVING_MODES_Process();
+		MONITORING_Process();
 
 		FAILURES_Process();
 
-		MONITORING_Process();
+		DRIVING_MODES_Process();
 
 		RAMPA_PEDAL_Process();
 
 	    INDICATORS_Process();
-
-		CAN_APP_Process();
 
 		break;
 	}
