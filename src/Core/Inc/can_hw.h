@@ -16,12 +16,15 @@
  * Included files
  **********************************************************************************************************************/
 
+/* STM32 specific hardware configuration includes */
 #include "can.h"
 #include "tim.h"
 
+/* CAN driver includes */
 #include "can_api.h"
 #include "can_wrapper.h"
 
+/* STM32 HAL include */
 #include "main.h"
 
 /***********************************************************************************************************************

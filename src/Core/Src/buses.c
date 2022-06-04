@@ -34,11 +34,11 @@ typedef_bus1_t bus_data =
 	{
 		.botones_cambio_estado = kBTN_NONE,
 		.hombre_muerto = kHOMBRE_MUERTO_OFF,
-		.perifericos_ok = kMODULE_INFO_OK
+		.perifericos_ok = kMODULE_INFO_ERROR
 	},
-	.Rx_Bms = {.bms_ok = kMODULE_INFO_OK},
-	.Rx_Dcdc = {.dcdc_ok = kMODULE_INFO_OK},
-	.Rx_Inversor = {.inversor_ok = kMODULE_INFO_OK},
+	.Rx_Bms = {.bms_ok = kMODULE_INFO_ERROR},
+	.Rx_Dcdc = {.dcdc_ok = kMODULE_INFO_ERROR},
+	.Rx_Inversor = {.inversor_ok = kMODULE_INFO_ERROR},
 
 	/* Estructuras con estados de las variables decodificadas de los módulos */
 	.St_Bms = {kVAR_STATE_DATA_PROBLEM},
@@ -65,8 +65,11 @@ typedef_bus2_t bus_can_output =
 /* Inicialización de bus de recepción CAN (bus 3) */
 typedef_bus3_t bus_can_input =
 {
-	.bms_ok = CAN_VALUE_MODULE_OK,
-	.dcdc_ok = CAN_VALUE_MODULE_OK,
-	.inversor_ok = CAN_VALUE_MODULE_OK,
-	.perifericos_ok = CAN_VALUE_MODULE_OK
+	.bms_ok = CAN_VALUE_MODULE_ERROR,
+	.dcdc_ok = CAN_VALUE_MODULE_ERROR,
+	.inversor_ok = CAN_VALUE_MODULE_ERROR,
+	.perifericos_ok = CAN_VALUE_MODULE_ERROR,
+
+	.hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_OFF,
+	.botones_cambio_estado = CAN_VALUE_BTN_NONE
 };

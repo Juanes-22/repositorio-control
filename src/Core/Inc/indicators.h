@@ -16,8 +16,13 @@
  * Included files
  **********************************************************************************************************************/
 
+/* Application includes */
 #include "buses.h"
 
+/* BSP (board support package) include */
+#include "stm32f4xx_control.h"
+
+/* STM32 HAL include */
 #include "main.h"
 
 /***********************************************************************************************************************
@@ -27,7 +32,7 @@
 /**
  * @brief Función principal bloque generación de indicadores.
  * 
- * Actualiza LEDs de acuerdo al modo de manejo actual.
+ * Por defecto, actualiza LEDs de acuerdo al modo de manejo actual.
  *
  * No es static, por lo que puede ser usada por otros archivos.
  *

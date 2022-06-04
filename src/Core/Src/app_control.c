@@ -151,6 +151,7 @@ void MX_APP_Process(void)
 				time_out = false;
 			}
 		}
+
 		break;
 
 	/* Estado tarjeta de Control running */
@@ -168,28 +169,7 @@ void MX_APP_Process(void)
 
 	    INDICATORS_Process();
 
-	    //CAN_APP_Process();
-
-	    if (flag_rx_can == CAN_MSG_RECEIVED) 
-		{
-	    	flag_rx_can = CAN_MSG_NOT_RECEIVED;
-
-	    	BSP_LED_Toggle(LED2);
-	    }
-
-		switch (bus_data.Rx_Peripherals.hombre_muerto)
-		{
-		case kHOMBRE_MUERTO_ON:
-			bus_can_output.hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_ON;
-			break;
-
-		case kHOMBRE_MUERTO_OFF:
-			bus_can_output.hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_OFF;
-			break;
-
-		default:
-			break;
-		}
+		CAN_APP_Process();
 
 		break;
 	}

@@ -40,6 +40,8 @@ static float RAMPA_PEDAL_Get_Rampa_HombreMuerto(rx_var_t pedal);
 
 static void RAMPA_PEDAL_Send_Velocidad(float to_send, typedef_bus2_t* bus_can_output);
 
+static void RAMPA_PEDAL_Send_HM_State(hm_state_t to_send, typedef_bus2_t* bus_can_output);
+
 /***********************************************************************************************************************
  * Public functions implementation
  **********************************************************************************************************************/
@@ -90,6 +92,9 @@ void RAMPA_PEDAL_Process(void)
 
     /* Actualiza velocidad inversor en bus de salida CAN */
     RAMPA_PEDAL_Send_Velocidad(bus_data.velocidad_inversor, &bus_can_output);
+
+	/* Actualiza estado hombre muerto a bus de salida CAN */
+	RAMPA_PEDAL_Send_HM_State(Rx_Peripherals->hombre_muerto, &bus_can_output);
 }
 
 /***********************************************************************************************************************
@@ -218,4 +223,26 @@ static float RAMPA_PEDAL_Get_Rampa_HombreMuerto(rx_var_t pedal) {
 static void RAMPA_PEDAL_Send_Velocidad(float to_send, typedef_bus2_t* bus_can_output)
 {
     bus_can_output->nivel_velocidad = (uint8_t)round(to_send);
+}
+
+/**
+ * @brief Envío de estado de hombre muerto a bus de salida CAN.
+ *
+ * @param to_send           Estado de hombre muerto a enviar
+ * @param bus_can_output    Puntero a estructura de tipo typedef_bus2_t (bus de salida CAN)
+ */
+static void RAMPA_PEDAL_Send_HM_State(hm_state_t to_send, typedef_bus2_t* bus_can_output)
+{
+    /* Envío a bus de salida CAN */
+    switch (to_send)
+    {
+    case kHOMBRE_MUERTO_ON:
+        bus_can_output->hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_ON;
+        break;
+    case kHOMBRE_MUERTO_OFF:
+        bus_can_output->hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_OFF;
+        break;
+    default:
+        break;
+    }
 }

@@ -16,6 +16,13 @@
 #include "failures.h"
 
 /***********************************************************************************************************************
+ * Private macros
+ **********************************************************************************************************************/
+
+/* Número de módulos en estado PROBLEM para triggering de autokill */
+#define NUM_OF_PROBLEM_MODULES 		2
+
+/***********************************************************************************************************************
  * Private variables definitions
  **********************************************************************************************************************/
 
@@ -176,7 +183,7 @@ static void FAILURES_StateMachine(void)
         /* Actualiza info de control a ERROR en bus de salida CAN */
         FAILURES_Send_ControlInfo(kMODULE_INFO_ERROR, &bus_can_output);
 
-        /* Actualiza variable autokill en bus de salida can y envía mensaje de maxima prioridad CAN */
+        /* Actualiza variable autokill en bus de salida CAN */
         FAILURES_Send_Autokill(&bus_can_output);
 
         break;
@@ -194,27 +201,15 @@ static void FAILURES_StateMachine(void)
  */
 static bool FAILURES_Is_Autokill(void)
 {
-    bool is_autokill = false;
-
     int count = 0;
 
-    /* Más de 2 módulos en PROBLEM */
-	if (bus_data.bms_status == kMODULE_STATUS_PROBLEM)
-	{
-		count++;
-	}
-	if (bus_data.dcdc_status == kMODULE_STATUS_PROBLEM)
-	{
-		count++;
-	}
-	if (bus_data.inversor_status == kMODULE_STATUS_PROBLEM)
-	{
-		count++;
-	}
+	if (bus_data.bms_status == kMODULE_STATUS_PROBLEM) count++;
 
-    is_autokill = (count >= 2);
+	if (bus_data.dcdc_status == kMODULE_STATUS_PROBLEM) count++;
 
-    return is_autokill;
+	if (bus_data.inversor_status == kMODULE_STATUS_PROBLEM) count++;
+
+    return count >= NUM_OF_PROBLEM_MODULES ? true : false;
 }
 
 /**

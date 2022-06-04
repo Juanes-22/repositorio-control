@@ -90,8 +90,8 @@
 
 /* ----------------------------- hombre_muerto ------------------------------- */
 
-#define CAN_VALUE_HOMBRE_MUERTO_ON                  0x00
-#define CAN_VALUE_HOMBRE_MUERTO_OFF                 0x01
+#define CAN_VALUE_HOMBRE_MUERTO_OFF                 0x00
+#define CAN_VALUE_HOMBRE_MUERTO_ON                  0x01
 
 /* ============================== ID Reception =============================== */
 

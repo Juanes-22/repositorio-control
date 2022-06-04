@@ -17,12 +17,21 @@
  * Included files
  **********************************************************************************************************************/
 
+/* CAN driver include */
 #include "can_api.h"
+
+/* CAN application includes */
 #include "can_hw.h"
 #include "can_def.h"
+
+/* Application includes */
 #include "decode_data.h"
 #include "buses.h"
 
+/* BSP (board support package) include */
+#include "stm32f4xx_control.h"
+
+/* STM32 HAL include */
 #include "main.h"
 
 /***********************************************************************************************************************

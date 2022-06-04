@@ -20,14 +20,13 @@
  **********************************************************************************************************************/
 
 /** @brief Define si usar feature monitoreo de las variables generales del vehículo o no */
-#define USE_VEHICLE_VAR_MONITORING_FEATURE          1
+#define USE_VEHICLE_VAR_MONITORING_FEATURE          0
 
 /***********************************************************************************************************************
  * Private variables definitions
  **********************************************************************************************************************/
 
-#if (USE_VEHICLE_VAR_MONITORING_FEATURE > 0)
-
+#if USE_VEHICLE_VAR_MONITORING_FEATURE == 1
 /*
 
 PROBLEMA:
@@ -140,10 +139,8 @@ const rx_inversor_limits_t inversor_sport_limits =
  * Private functions prototypes
  **********************************************************************************************************************/
 
-#if (USE_VEHICLE_VAR_MONITORING_FEATURE > 0)
-
+#if USE_VEHICLE_VAR_MONITORING_FEATURE == 1
 static void MONITORING_Update_AnalogVariablesState(void);
-
 static void MONITORING_Update_ModulesStatus(void);
 
 #endif /* USE_VEHICLE_VAR_MONITORING_FEATURE */
@@ -166,13 +163,11 @@ void MONITORING_Process(void)
 {
     MONITORING_Update_ReceivedModulesStatus();     	// actualiza estado recibido de los módulos (fallas internas)
 
-    #if (USE_VEHICLE_VAR_MONITORING_FEATURE > 0)
-
+#if USE_VEHICLE_VAR_MONITORING_FEATURE == 1
     MONITORING_Update_AnalogVariablesState();       // variables analógicas recibidas que dan información general del estado del vehículo
-
     MONITORING_Update_ModulesStatus();              // estado de los módulos de acuerdo al estado de las variables analógicas recibidas
 
-    #endif /* USE_VEHICLE_VAR_MONITORING_FEATURE */
+#endif /* USE_VEHICLE_VAR_MONITORING_FEATURE */
 }
 
 /***********************************************************************************************************************
@@ -195,8 +190,7 @@ static void MONITORING_Update_ReceivedModulesStatus(void)
     bus_data.inversor_status = MONITORING_API_Get_Inversor_ReceivedStatus(&bus_data.Rx_Inversor);   // actualiza variable estado del módulo inversor
 }
 
-#if (USE_VEHICLE_VAR_MONITORING_FEATURE > 0)
-
+#if USE_VEHICLE_VAR_MONITORING_FEATURE == 1
 /**
  * @brief Vehicle Variables Monitoring
  *

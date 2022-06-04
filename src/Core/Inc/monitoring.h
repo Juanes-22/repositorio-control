@@ -16,6 +16,7 @@
  * Included files
  **********************************************************************************************************************/
 
+/* Application includes */
 #include "monitoring_api.h"
 #include "buses.h"
 

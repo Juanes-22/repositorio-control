@@ -22,9 +22,6 @@
 /** @brief CAN number of messages to transmit */
 #define CAN_NUM_OF_MSGS                 6
 
-/** @brief CAN messages transmission interval in ms */
-#define CAN_TRANSMIT_INTERVAL_MS        100
-
 /***********************************************************************************************************************
  * Private variables definitions
  **********************************************************************************************************************/
@@ -39,6 +36,9 @@ static uint32_t can_ids_array[CAN_NUM_OF_MSGS] = {CAN_ID_AUTOKILL,
                                                   
 /** @brief Array of CAN message's values to transmit */
 static uint8_t can_values_array[CAN_NUM_OF_MSGS];
+
+/** @brief Increments every time CAN TX flag is set as CAN_TX_READY */
+static int can_tx_flag_count = 0;
 
 /***********************************************************************************************************************
  * Private functions prototypes
@@ -80,6 +80,9 @@ void CAN_APP_Process(void)
     /* Hubo trigger para transmisión mensaje CAN */
     if (flag_tx_can == CAN_TX_READY)
     {
+    	/* Incrementa contador de bandera mensaje recibido CAN */
+    	can_tx_flag_count++;
+
         /* Envío de datos del bus de salida CAN a módulo CAN */
         CAN_APP_Send_BusData(&bus_can_output);
 
@@ -100,6 +103,10 @@ void CAN_APP_Process(void)
  */
 void CAN_APP_Send_BusData(typedef_bus2_t *bus_can_output)
 {
+	/* Index for CAN values array and CAN IDs array */
+	static int i = 0;
+
+	/* Bus data into CAN values array */
 	can_values_array[0] = bus_can_output->autokill;
 	can_values_array[1] = bus_can_output->estado_manejo;
 	can_values_array[2] = bus_can_output->estado_falla;
@@ -107,27 +114,42 @@ void CAN_APP_Send_BusData(typedef_bus2_t *bus_can_output)
 	can_values_array[4] = bus_can_output->hombre_muerto;
 	can_values_array[5] = bus_can_output->control_ok;
 
-    /* Send bus variables */
-    for (int i = 0; i < CAN_NUM_OF_MSGS; i++)
-    {
-        can_obj.Frame.id = can_ids_array[i];
-        can_obj.Frame.payload_length = 1;
-        can_obj.Frame.payload_buff[0] = can_values_array[i];
+	/* Send bus variables every 500ms (CAN transmission timer is set to 100ms) */
+	if(can_tx_flag_count % 5 == 0)
+	{
+		/* Toggle LED 1 (Red LED) */
+		BSP_LED_Toggle(LED1);
 
-        if (CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK)
-        {
-            Error_Handler();
-        }
+		/* Index exceeds number of messages to transmit */
+		if(i >= CAN_NUM_OF_MSGS)
+		{
+			i=0;
+			return;
+		}
 
-        HAL_Delay(CAN_TRANSMIT_INTERVAL_MS);
-    }
+		/* Set up can_obj for message transmission */
+		can_obj.Frame.id = can_ids_array[i];
+		can_obj.Frame.payload_length = 1;
+		can_obj.Frame.payload_buff[0] = can_values_array[i];
+
+		/* Send message */
+		if (CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK)
+		{
+			Error_Handler();
+		}
+
+		i++;
+
+		/* Better reset this to zero */
+		can_tx_flag_count = 0;
+	}
 }
 
 /***********************************************************************************************************************
  * Private functions implementation
  **********************************************************************************************************************/
 
-/* Guardar mensaje CAN recibido en bus de entrada CAN */
+/* Guardar en bus de entrada CAN el mensaje CAN recibido  */
 static void CAN_APP_Store_ReceivedMessage(void)
 {
     /* Según standard identifier que se recibió, guarda dato en variables de bus de recepción CAN */

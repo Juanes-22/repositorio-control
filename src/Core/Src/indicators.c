@@ -43,7 +43,7 @@
 /**
  * @brief Función principal bloque generación de indicadores.
  * 
- * Actualiza LEDs de acuerdo al modo de manejo actual.
+ * Por defecto, actualiza LEDs de acuerdo al modo de manejo actual.
  *
  * No es static, por lo que puede ser usada por otros archivos.
  *

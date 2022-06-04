@@ -1,4 +1,2 @@
-monitoring.c:165:6:MONITORING_Process	8	static
-monitoring.c:189:13:MONITORING_Update_ReceivedModulesStatus	8	static
-monitoring.c:207:13:MONITORING_Update_AnalogVariablesState	8	static
-monitoring.c:281:13:MONITORING_Update_ModulesStatus	16	static
+monitoring.c:162:6:MONITORING_Process	8	static
+monitoring.c:184:13:MONITORING_Update_ReceivedModulesStatus	8	static
