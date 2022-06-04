@@ -66,13 +66,13 @@
   * @{
   */
 #define BUZZER_PWM_TIM_INSTANCE                 TIM1
-#define BUZZER_PWM_TIM_CHANNEL				    TIM_CHANNEL_3
+#define BUZZER_PWM_TIM_CHANNEL                  TIM_CHANNEL_3
 #define BUZZER_GPIO_PIN                         GPIO_PIN_10
 #define BUZZER_GPIO_PORT                        GPIOA
 #define BUZZER_GPIO_CLK_ENABLE()                __HAL_RCC_GPIOA_CLK_ENABLE()
 #define BUZZER_GPIO_CLK_DISABLE()               __HAL_RCC_GPIOA_CLK_DISABLE()
-#define BUZZER_TIM_CLK_ENABLE()				    __HAL_RCC_TIM1_CLK_ENABLE()
-#define BUZZER_TIM_CLK_DISABLE()			    __HAL_RCC_TIM1_CLK_DISABLE()
+#define BUZZER_TIM_CLK_ENABLE()                 __HAL_RCC_TIM1_CLK_ENABLE()
+#define BUZZER_TIM_CLK_DISABLE()                __HAL_RCC_TIM1_CLK_DISABLE()
 /**
   * @}
   */
