@@ -65,10 +65,10 @@ typedef_bus2_t bus_can_output =
 /* Inicialización de bus de recepción CAN (bus 3) */
 typedef_bus3_t bus_can_input =
 {
-	.bms_ok = CAN_VALUE_MODULE_ERROR,
-	.dcdc_ok = CAN_VALUE_MODULE_ERROR,
-	.inversor_ok = CAN_VALUE_MODULE_ERROR,
-	.perifericos_ok = CAN_VALUE_MODULE_ERROR,
+	.bms_ok = CAN_VALUE_MODULE_IDLE,
+	.dcdc_ok = CAN_VALUE_MODULE_IDLE,
+	.inversor_ok = CAN_VALUE_MODULE_IDLE,
+	.perifericos_ok = CAN_VALUE_MODULE_IDLE,
 
 	.hombre_muerto = CAN_VALUE_HOMBRE_MUERTO_OFF,
 	.botones_cambio_estado = CAN_VALUE_BTN_NONE

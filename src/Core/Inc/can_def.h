@@ -1,11 +1,11 @@
 /**
  * @file can_def.h
  * @author Subgrupo Control y Periféricos - Elektron Motorsports
- * @brief Definiciones para IDs y valores de CAN para Control
+ * @brief Definiciones para IDs y valores de CAN
  * @version 0.1
- * @date 2022-05-05
+ * @date 2022-04-25
  *
- * @copyright Copyright (c) 2021
+ * @copyright Copyright (c) 2022
  *
  */
 
@@ -17,24 +17,26 @@
  **********************************************************************************************************************/
 
 /********************************************************************************
- *                                CAN IDs                                       *
+ *                                  CAN IDs                                     *
  *******************************************************************************/
 
-/* ============================= ID Transmition ============================== */
+/* ================================ Control ================================== */
 
-#define CAN_ID_AUTOKILL                 			0x001
-#define CAN_ID_ESTADO_MANEJO 		    			0x010
-#define CAN_ID_ESTADO_FALLA			    			0x011
-#define CAN_ID_NIVEL_VELOCIDAD		    			0x012
-#define CAN_ID_HOMBRE_MUERTO		    			0x013
+#define CAN_ID_CONTROL_AUTOKILL                 	0x001
+#define CAN_ID_CONTROL_ESTADO_MANEJO 		    	0x010
+#define CAN_ID_CONTROL_ESTADO_FALLA			    	0x011
+#define CAN_ID_CONTROL_NIVEL_VELOCIDAD		    	0x012
+#define CAN_ID_CONTROL_HOMBRE_MUERTO		    	0x013
 #define CAN_ID_CONTROL_OK			    			0x014
 
-/* ============================== ID Reception =============================== */
+/* =============================== Perifericos =============================== */
 
 #define CAN_ID_PERIFERICOS_PEDAL					0x002
 #define CAN_ID_PERIFERICOS_HOMBRE_MUERTO			0x003
 #define CAN_ID_PERIFERICOS_BOTONES_CAMBIO_ESTADO	0x004
 #define CAN_ID_PERIFERICOS_OK						0x005
+
+/* ================================== BMS ==================================== */
 
 #define CAN_ID_BMS_VOLTAJE							0x020
 #define	CAN_ID_BMS_CORRIENTE						0x021
@@ -44,11 +46,15 @@
 #define	CAN_ID_BMS_NIVEL_BATERIA					0x025
 #define CAN_ID_BMS_OK								0x026
 
+/* ================================== DCDC =================================== */
+
 #define CAN_ID_DCDC_VOLTAJE_BATERIA					0x030
 #define CAN_ID_DCDC_VOLTAJE_SALIDA      			0x031
 #define CAN_ID_DCDC_T_MAX							0x032
 #define CAN_ID_DCDC_OK								0x033
 #define CAN_ID_DCDC_POTENCIA            			0x034
+
+/* ================================ Inversor ================================= */
 
 #define CAN_ID_INVERSOR_VELOCIDAD					0x040
 #define CAN_ID_INVERSOR_V							0x041
@@ -67,8 +73,6 @@
 #define CAN_VALUE_MODULE_IDLE                       0x00
 #define CAN_VALUE_MODULE_OK          	            0x01
 #define CAN_VALUE_MODULE_ERROR       	            0x02
-
-/* ============================= ID Transmition ============================== */
 
 /* -------------------------------- autokill --------------------------------- */
 
@@ -92,8 +96,6 @@
 
 #define CAN_VALUE_HOMBRE_MUERTO_OFF                 0x00
 #define CAN_VALUE_HOMBRE_MUERTO_ON                  0x01
-
-/* ============================== ID Reception =============================== */
 
 /* -------------------------- botones_cambio_estado -------------------------- */
 

@@ -66,7 +66,7 @@ void CAN_HW_Init(void)
  **********************************************************************************************************************/
 
 /*
- *  Callback mensaje CAN recibido
+ * Callback mensaje CAN recibido
  */
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan)
 {
@@ -94,9 +94,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
 	{
 		/* Toggle LED 1 (Red LED) */
 		BSP_LED_Toggle(LED1);
-
-		/* The flag indicates that the callback was called */
-		flag_tx_can = CAN_TX_READY;
 
 		/* Transmit test message */
 		can_obj.Frame.id = test_msg_id;

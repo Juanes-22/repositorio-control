@@ -1,7 +1,7 @@
 /**
  * @file can_wrapper.c
  * @author Subgrupo Control y Periféricos - Elektron Motorsports
- * @brief Implementaciones funciones wrapper CAN para tarjeta de Control
+ * @brief Implementaciones funciones wrapper CAN para tarjeta Control
  * @version 0.1
  * @date 2022-18-05
  *
@@ -194,9 +194,9 @@ static void CAN_FilterConfig(void)
 
 	/* CAN filter configuration structure for Filter Bank 1 */
 	sFilterConfig.FilterBank = 1;
-	sFilterConfig.FilterIdHigh = (0xFFFF << 3) << 5;
+	sFilterConfig.FilterIdHigh = 0x00 << 5;
 	sFilterConfig.FilterIdLow = 0x0000;
-	sFilterConfig.FilterMaskIdHigh = 0x00 << 5;
+	sFilterConfig.FilterMaskIdHigh = (0xFFFF << 3) << 5;
 	sFilterConfig.FilterMaskIdLow = 0x0000;
 
 	/* Configure CAN filter */
@@ -220,7 +220,7 @@ static void CAN_FilterConfig(void)
 
 	/* CAN filter configuration structure for Filter Bank 3 */
 	sFilterConfig.FilterBank = 3;
-	sFilterConfig.FilterIdHigh = 0x20 << 5;
+	sFilterConfig.FilterIdHigh = 0x30 << 5;
 	sFilterConfig.FilterIdLow = 0x0000;
 	sFilterConfig.FilterMaskIdHigh = (0xFFFF << 3) << 5;
 	sFilterConfig.FilterMaskIdLow = 0x0000;

@@ -27,18 +27,15 @@
  **********************************************************************************************************************/
 
 /** @brief Array of CAN message's IDs to transmit */
-static uint32_t can_ids_array[CAN_NUM_OF_MSGS] = {CAN_ID_AUTOKILL,
-                                                  CAN_ID_ESTADO_MANEJO,
-                                                  CAN_ID_ESTADO_FALLA,
-                                                  CAN_ID_NIVEL_VELOCIDAD,
-                                                  CAN_ID_HOMBRE_MUERTO,
+static uint32_t can_ids_array[CAN_NUM_OF_MSGS] = {CAN_ID_CONTROL_AUTOKILL,
+                                                  CAN_ID_CONTROL_ESTADO_MANEJO,
+                                                  CAN_ID_CONTROL_ESTADO_FALLA,
+                                                  CAN_ID_CONTROL_NIVEL_VELOCIDAD,
+                                                  CAN_ID_CONTROL_HOMBRE_MUERTO,
                                                   CAN_ID_CONTROL_OK};
                                                   
 /** @brief Array of CAN message's values to transmit */
 static uint8_t can_values_array[CAN_NUM_OF_MSGS];
-
-/** @brief Increments every time CAN TX flag is set as CAN_TX_READY */
-static int can_tx_flag_count = 0;
 
 /***********************************************************************************************************************
  * Private functions prototypes
@@ -62,6 +59,9 @@ static int can_tx_flag_count = 0;
  */
 void CAN_APP_Process(void)
 {
+	/** Increments every time CAN TX flag is set as CAN_TX_READY */
+	static int can_tx_flag_count = 0;
+
     /* Recibió mensaje CAN */
     if (flag_rx_can == CAN_MSG_RECEIVED)
     {
@@ -81,11 +81,21 @@ void CAN_APP_Process(void)
     /* Hubo trigger para transmisión mensaje CAN */
     if (flag_tx_can == CAN_TX_READY)
     {
-    	/* Incrementa contador de bandera mensaje recibido CAN */
+    	/* Incrementa contador de bandera transmisión CAN */
     	can_tx_flag_count++;
 
-        /* Envío de datos del bus de salida CAN a módulo CAN */
-        CAN_APP_Send_BusData(&bus_can_output);
+    	/* Send bus variables every 500ms (CAN transmission timer is set to 100ms) */
+    	if(can_tx_flag_count % 5 == 0)
+    	{
+    		/* Toggle LED 1 (Red LED) */
+    		BSP_LED_Toggle(LED1);
+
+			/* Envío de datos del bus de salida CAN a módulo CAN */
+			CAN_APP_Send_BusData(&bus_can_output);
+
+			/* Better reset this to zero */
+			can_tx_flag_count = 0;
+    	}
 
         /* Clear CAN TX ready flag */
         flag_rx_can = CAN_TX_NOT_READY;
@@ -115,35 +125,25 @@ void CAN_APP_Send_BusData(typedef_bus2_t *bus_can_output)
 	can_values_array[4] = bus_can_output->hombre_muerto;
 	can_values_array[5] = bus_can_output->control_ok;
 
-	/* Send bus variables every 500ms (CAN transmission timer is set to 100ms) */
-	if(can_tx_flag_count % 5 == 0)
+	/* Index exceeds number of messages to transmit */
+	if(i >= CAN_NUM_OF_MSGS)
 	{
-		/* Toggle LED 1 (Red LED) */
-		BSP_LED_Toggle(LED1);
-
-		/* Index exceeds number of messages to transmit */
-		if(i >= CAN_NUM_OF_MSGS)
-		{
-			i=0;
-			return;
-		}
-
-		/* Set up can_obj for message transmission */
-		can_obj.Frame.id = can_ids_array[i];
-		can_obj.Frame.payload_length = 1;
-		can_obj.Frame.payload_buff[0] = can_values_array[i];
-
-		/* Send message */
-		if (CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK)
-		{
-			Error_Handler();
-		}
-
-		i++;
-
-		/* Better reset this to zero */
-		can_tx_flag_count = 0;
+		i=0;
+		return;
 	}
+
+	/* Set up can_obj for message transmission */
+	can_obj.Frame.id = can_ids_array[i];
+	can_obj.Frame.payload_length = 1;
+	can_obj.Frame.payload_buff[0] = can_values_array[i];
+
+	/* Send message */
+	if (CAN_API_Send_Message(&can_obj) != CAN_STATUS_OK)
+	{
+		Error_Handler();
+	}
+
+	i++;
 }
 
 /**

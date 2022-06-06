@@ -53,9 +53,6 @@ static uint8_t app_state = kWAITING_ECHO_RESPONSE;
 /** Para conteo de timeout en estado kWAITING_ECHO_RESPONSE */
 static uint32_t tickstart;
 
-/** Para timeout de echo en estado kWAITING_ECHO_RESPONSE */
-static bool time_out = false;
-
 /***********************************************************************************************************************
  * Private functions prototypes
  **********************************************************************************************************************/
@@ -112,13 +109,11 @@ void MX_APP_Process(void)
 
 		while(1)
 		{
-			/* Hay timeout? */
-			if( (HAL_GetTick() - tickstart) > TIMEOUT_VALUE ) time_out = true;
-
 		    /* Recibió mensaje CAN */
 		    if (flag_rx_can == CAN_MSG_RECEIVED)
 		    {
 		        CAN_APP_Store_ReceivedMessage();
+
 		        flag_rx_can = CAN_MSG_NOT_RECEIVED;
 		    }
 
@@ -133,9 +128,8 @@ void MX_APP_Process(void)
 			{
 				HAL_Delay(500);
 
-				bus_can_output.control_ok = CAN_VALUE_MODULE_OK;
-
 				/* Send control_ok MODULE_OK response */
+				bus_can_output.control_ok = CAN_VALUE_MODULE_OK;
 				CAN_APP_Send_BusData(&bus_can_output);
 
 				/* Indicate that start up has finished */
@@ -145,14 +139,12 @@ void MX_APP_Process(void)
 
 				break;
 			}
-			else if(time_out)
+			else if((HAL_GetTick() - tickstart) > TIMEOUT_VALUE)
 			{
 				/* Envía echo a demás tarjetas, de nuevo */
 				MX_APP_Send_Echo(&bus_can_output);
 
 				tickstart = HAL_GetTick();
-
-				time_out = false;
 			}
 		}
 
@@ -186,12 +178,10 @@ void MX_APP_Process(void)
 static void MX_APP_Send_Echo(typedef_bus2_t* bus_can_output)
 {
 	bus_can_output->control_ok = CAN_VALUE_MODULE_OK;
-
 	CAN_APP_Send_BusData(bus_can_output);
 
 	HAL_Delay(ECHO_LENGTH);
 
 	bus_can_output->control_ok = CAN_VALUE_MODULE_IDLE;
-
 	CAN_APP_Send_BusData(bus_can_output);
 }
