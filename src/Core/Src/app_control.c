@@ -31,10 +31,10 @@
  **********************************************************************************************************************/
 
 /** @brief Duración del echo en ms */
-#define ECHO_LENGTH         1000U
+#define ECHO_LENGTH_MS			1000U
 
 /** @brief Duración de la espera hasta timeout en ms */
-#define TIMEOUT_VALUE       5000U
+#define TIMEOUT_VALUE_MS       	5000U
 
 /***********************************************************************************************************************
  * Private variables definitions
@@ -139,7 +139,7 @@ void MX_APP_Process(void)
 
 				break;
 			}
-			else if((HAL_GetTick() - tickstart) > TIMEOUT_VALUE)
+			else if((HAL_GetTick() - tickstart) > TIMEOUT_VALUE_MS)
 			{
 				/* Envía echo a demás tarjetas, de nuevo */
 				MX_APP_Send_Echo(&bus_can_output);
@@ -180,7 +180,7 @@ static void MX_APP_Send_Echo(typedef_bus2_t* bus_can_output)
 	bus_can_output->control_ok = CAN_VALUE_MODULE_OK;
 	CAN_APP_Send_BusData(bus_can_output);
 
-	HAL_Delay(ECHO_LENGTH);
+	HAL_Delay(ECHO_LENGTH_MS);
 
 	bus_can_output->control_ok = CAN_VALUE_MODULE_IDLE;
 	CAN_APP_Send_BusData(bus_can_output);
